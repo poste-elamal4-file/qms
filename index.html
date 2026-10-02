@@ -39,14 +39,22 @@
       border:1px solid rgba(229,231,235,0.7);
     }
 
-    /* --- تنسيق الشعار --- */
+    /* --- تنسيق الشعار واسم البريد --- */
     .brand-logo {
       max-width: 140px;
       height: auto;
-      margin: 0 auto 16px auto;
+      margin: 0 auto 12px auto;
       display: block;
       object-fit: contain;
     }
+
+    .agency-name {
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--border);
+    }
+    .agency-name .ar { font-size: 18px; font-weight: 800; color: var(--primary); }
+    .agency-name .fr { font-size: 13px; font-weight: 700; color: var(--muted); }
 
     .bi{ display:flex; flex-direction:column; gap:4px; }
     .bi .fr,.bi .ar{ display:block; line-height:1.2; unicode-bidi:isolate; }
@@ -166,8 +174,16 @@
 
 <body>
   <div class="card">
-    <!-- إدراج الشعار هنا -->
+    <!-- الشعار -->
     <img src="logo.png" alt="Logo" class="brand-logo" />
+
+    <!-- اسم مكتب البريد -->
+    <div class="agency-name">
+      <div class="bi center">
+        <span class="ar" lang="ar">مكتب بريد حي الأمل 4</span>
+        <span class="fr" lang="fr">Poste Cité El Amel 4</span>
+      </div>
+    </div>
 
     <h1 class="page-title">
       <div class="bi center">
