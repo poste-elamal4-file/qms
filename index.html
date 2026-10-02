@@ -39,6 +39,15 @@
       border:1px solid rgba(229,231,235,0.7);
     }
 
+    /* --- تنسيق الشعار --- */
+    .brand-logo {
+      max-width: 140px;
+      height: auto;
+      margin: 0 auto 16px auto;
+      display: block;
+      object-fit: contain;
+    }
+
     .bi{ display:flex; flex-direction:column; gap:4px; }
     .bi .fr,.bi .ar{ display:block; line-height:1.2; unicode-bidi:isolate; }
     .bi .fr{ direction:ltr; text-align:left; font-family:Inter, sans-serif; }
@@ -157,6 +166,9 @@
 
 <body>
   <div class="card">
+    <!-- إدراج الشعار هنا -->
+    <img src="logo.png" alt="Logo" class="brand-logo" />
+
     <h1 class="page-title">
       <div class="bi center">
         <span class="ar" lang="ar">رقم التذكرة الحالي</span>
@@ -171,7 +183,7 @@
     <div class="user-section">
       <h3>
         <div class="bi center">
-          <span class="ar" lang="ar">تتبُّع تذكرتك</span>
+          <span class="ar" lang="ar">تتبُّع تذكرتك</span>
           <span class="fr" lang="fr">Suivi de votre ticket</span>
         </div>
       </h3>
@@ -231,7 +243,6 @@
     const TICKET_URL  = makeUrl("queue/current_ticket");
     const OFFSET_URL  = makeUrl(".info/serverTimeOffset");
 
-    // MOD: one meta endpoint instead of two
     const META_URL = makeUrl("queue/meta");
 
     const ESP32_LAST_SEEN_URL = makeUrl("queue/meta/esp32_last_seen_ms");
