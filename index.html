@@ -216,8 +216,8 @@
       <div class="input-group">
         <label for="myTicketInput">
           <div class="bi">
-            <span class="ar" lang="ar">رقم تذكرتك</span>
-            <span class="fr" lang="fr">Votre numéro de ticket</span>
+            <span class="ar" lang="ar">رقم دورك</span>
+            <span class="fr" lang="fr">Numéro de votre tour<</span>
           </div>
         </label>
         <input type="number" id="myTicketInput" placeholder="Ex : 45 — مثال: 45" min="1" />
@@ -656,7 +656,7 @@
       const threshold = parseInt(thresholdInput.value, 10);
 
       if (isNaN(myTicket) || myTicket < 1) {
-        setBanner("Veuillez saisir un numéro de ticket valide.", "يرجى إدخال رقم تذكرة صحيح.", { active:true, urgent:true });
+        setBanner("Veuillez saisir un numéro de ticket valide.", "يرجى إدخال رقم صف صحيح.", { active:true, urgent:true });
         return false;
       }
       if (isNaN(threshold) || threshold < 0) {
