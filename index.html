@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Système de gestion de file d'attente / نظام إدارة طابور الانتظار</title>
+  <title>Poste Cite El Amel 4 — Système de gestion de file d'attente</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,22 +39,31 @@
       border:1px solid rgba(229,231,235,0.7);
     }
 
-    /* --- تنسيق الشعار واسم البريد --- */
+    /* --- تنسيق الشعار --- */
     .brand-logo {
       max-width: 140px;
       height: auto;
-      margin: 0 auto 12px auto;
+      margin: 0 auto 10px auto;
       display: block;
       object-fit: contain;
     }
 
-    .agency-name {
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px dashed var(--border);
+    /* --- اسم البريد (الجديد) --- */
+    .branch-name{
+      margin: 0 0 12px 0;
     }
-    .agency-name .ar { font-size: 18px; font-weight: 800; color: var(--primary); }
-    .agency-name .fr { font-size: 13px; font-weight: 700; color: var(--muted); }
+    .branch-name .ar{
+    font-family:Tajawal, Tahoma, Arial, sans-serif;
+    font-size:18px;
+    font-weight:800;
+    color: var(--primary); /* نفس لون الزر */
+    }
+    .branch-name .fr{
+      font-family:Inter, sans-serif;
+      font-size:12.5px;
+      font-weight:800;
+      color:var(--muted);
+    }
 
     .bi{ display:flex; flex-direction:column; gap:4px; }
     .bi .fr,.bi .ar{ display:block; line-height:1.2; unicode-bidi:isolate; }
@@ -177,11 +186,11 @@
     <!-- الشعار -->
     <img src="logo.png" alt="Logo" class="brand-logo" />
 
-    <!-- اسم مكتب البريد -->
-    <div class="agency-name">
+    <!-- اسم البريد (الجديد) -->
+    <div class="branch-name">
       <div class="bi center">
         <span class="ar" lang="ar">مكتب بريد حي الأمل 4</span>
-        <span class="fr" lang="fr">Poste Cité El Amel 4</span>
+        <span class="fr" lang="fr">Poste Cite El Amel 4</span>
       </div>
     </div>
 
