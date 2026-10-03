@@ -583,12 +583,12 @@
     /***********************
      * Service Worker register
      ***********************/
-    const SW_URL = "sw.js";
+    const SW_URL = "/sw.js";
 
     async function registerServiceWorker() {
       try {
         if (!("serviceWorker" in navigator)) return false;
-        await navigator.serviceWorker.register(SW_URL);
+        await navigator.serviceWorker.register(SW_URL, { scope: "/" });
         return true;
       } catch {
         return false;
