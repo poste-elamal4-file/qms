@@ -264,35 +264,6 @@
       filter:none;
     }
 
-    /* أزرار إضافية للوحة الاختبار */
-    .test-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:center;
-      margin-top:6px;
-    }
-    .test-actions .btn{
-      margin:0;
-      max-width:none;
-      flex:1 1 140px;
-    }
-    .btn.gray{ background:#6b7280; }
-    .btn.dark{ background:#111827; }
-    .btn.warn{ background:#f59e0b; color:#111827; }
-    .btn.danger{ background:#dc2626; }
-    .test-checkbox{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin:10px 0 2px;
-      padding:10px 12px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      background:#fff;
-    }
-    .test-checkbox input{ transform:scale(1.1); }
-
     .alert-banner{
       display:none;
       background-color:var(--warn-bg);
@@ -363,6 +334,106 @@
     .status-container.closed .status-dot{
       background-color:var(--closed-dot);
       box-shadow:0 0 0 4px rgba(245,158,11,0.14);
+    }
+
+    /* ===== وضع الاختبار (Simulation Panel) ===== */
+    .sim-link{
+      display:inline-block;
+      margin-top:12px;
+      font-size:12.5px;
+      font-weight:800;
+      color:var(--primary);
+      text-decoration:underline;
+      cursor:pointer;
+    }
+
+    details.dev-panel{
+      margin-top:14px;
+      text-align:initial;
+      border:1px dashed rgba(229,231,235,0.95);
+      border-radius:16px;
+      overflow:hidden;
+      background:#fff;
+    }
+
+    details.dev-panel summary{
+      cursor:pointer;
+      padding:10px 12px;
+      list-style:none;
+      user-select:none;
+      background:linear-gradient(180deg, #f8fafc, #fff);
+    }
+    details.dev-panel summary::-webkit-details-marker{ display:none; }
+
+    .dev-body{
+      padding:12px 12px 14px;
+      border-top:1px dashed rgba(229,231,235,0.95);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .sim-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+
+    .sim-field label{
+      display:block;
+      margin-bottom:6px;
+    }
+
+    .sim-field input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+
+    .sim-actions{
+      display:flex;
+      gap:8px;
+      align-items:end;
+    }
+
+    .sim-btn{
+      flex:1;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(0,0,0,0.06);
+      cursor:pointer;
+      font-weight:900;
+      background:#111827;
+      color:#fff;
+    }
+
+    .sim-btn.light{
+      background:#fff;
+      color:var(--text);
+      border:1px solid var(--border);
+    }
+
+    .sim-btn.success{ background:var(--success); }
+    .sim-btn.danger{ background:#b91c1c; }
+
+    .sim-toggles{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      padding-top:4px;
+    }
+
+    .sim-toggles label{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      font-size:13px;
+      font-weight:800;
+      color:var(--text);
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -460,95 +531,76 @@
       <div id="statusText" style="width:100%;"></div>
     </div>
 
-    <!-- زر إظهار وضع الاختبار (يظهر فقط عند ?dev=1 أو ?test=1) -->
-    <button id="openTestBtn" class="btn dark" type="button" style="display:none; margin-top:12px;">
-      <span class="bi center">
-        <span class="ar" lang="ar">تفعيل وضع الاختبار</span>
-        <span class="fr" lang="fr">Activer le mode test</span>
-      </span>
-    </button>
-
-    <!-- لوحة وضع الاختبار (تظهر عند تفعيل test mode) -->
-    <div class="user-section" id="testPanel" style="display:none; margin-top:14px;">
-      <h3>
-        <span class="bi center">
+    <!-- وضع الاختبار (يظهر فقط عند ?sim=1) -->
+    <details class="dev-panel" id="simPanel" style="display:none;">
+      <summary>
+        <span class="bi center small">
           <span class="ar" lang="ar">وضع الاختبار (بدون ESP32)</span>
           <span class="fr" lang="fr">Mode test (sans ESP32)</span>
         </span>
-      </h3>
+      </summary>
 
-      <div class="input-group">
-        <label for="testTicketInput">
-          <span class="bi">
-            <span class="ar" lang="ar">رقم الصف الحالي (محاكاة)</span>
-            <span class="fr" lang="fr">Ticket actuel (simulation)</span>
-          </span>
-        </label>
-        <input type="number" id="testTicketInput" min="1" step="1" inputmode="numeric" />
+      <div class="dev-body">
+        <div class="sim-grid">
+          <div class="sim-field">
+            <label>
+              <span class="bi">
+                <span class="ar" lang="ar">رقم الصف (محاكاة)</span>
+                <span class="fr" lang="fr">Ticket (simulation)</span>
+              </span>
+            </label>
+            <input type="number" id="simTicketInput" min="0" step="1" />
+          </div>
+
+          <div class="sim-actions">
+            <button class="sim-btn light" id="simDecBtn" type="button">-1</button>
+            <button class="sim-btn success" id="simIncBtn" type="button">+1</button>
+          </div>
+
+          <div class="sim-field">
+            <label>
+              <span class="bi">
+                <span class="ar" lang="ar">الفاصل (ms) للزيادة التلقائية</span>
+                <span class="fr" lang="fr">Intervalle (ms) auto</span>
+              </span>
+            </label>
+            <input type="number" id="simIntervalInput" min="200" step="100" value="2500" />
+          </div>
+
+          <div class="sim-actions">
+            <button class="sim-btn" id="simAutoBtn" type="button">Auto: OFF</button>
+            <button class="sim-btn danger" id="simResetBtn" type="button">Reset</button>
+          </div>
+        </div>
+
+        <div class="sim-toggles">
+          <label>
+            <input type="checkbox" id="simForceOfflineChk" />
+            <span class="bi">
+              <span class="ar" lang="ar">محاكاة: غير متصل</span>
+              <span class="fr" lang="fr">Simulation : hors ligne</span>
+            </span>
+          </label>
+
+          <label>
+            <input type="checkbox" id="simForceClosedChk" />
+            <span class="bi">
+              <span class="ar" lang="ar">محاكاة: النظام مغلق</span>
+              <span class="fr" lang="fr">Simulation : système fermé</span>
+            </span>
+          </label>
+
+          <button class="sim-btn light" id="simDisableBtn" type="button">
+            Désactiver le mode test / إيقاف وضع الاختبار
+          </button>
+        </div>
       </div>
+    </details>
 
-      <div class="input-group">
-        <label for="testIntervalInput">
-          <span class="bi">
-            <span class="ar" lang="ar">كل كم ثانية يزيد الرقم تلقائيًا</span>
-            <span class="fr" lang="fr">Incrément auto (secondes)</span>
-          </span>
-        </label>
-        <input type="number" id="testIntervalInput" min="1" step="1" value="5" inputmode="numeric" />
-      </div>
+    <a href="#" id="simEnableLink" class="sim-link" style="display:none;">
+      Activer le mode test (sans ESP32) / تفعيل وضع الاختبار (بدون ESP32)
+    </a>
 
-      <div class="test-checkbox">
-        <input type="checkbox" id="testWriteFirebase" />
-        <span class="bi">
-          <span class="ar" lang="ar">اكتب إلى Firebase (ليظهر للجميع)</span>
-          <span class="fr" lang="fr">Écrire sur Firebase (visible par tous)</span>
-        </span>
-      </div>
-
-      <div class="test-actions">
-        <button id="testApplyBtn" class="btn" type="button">
-          <span class="bi center">
-            <span class="ar" lang="ar">تطبيق الرقم</span>
-            <span class="fr" lang="fr">Appliquer</span>
-          </span>
-        </button>
-
-        <button id="testMinusBtn" class="btn gray" type="button">
-          <span class="bi center">
-            <span class="ar" lang="ar">-1</span>
-            <span class="fr" lang="fr">-1</span>
-          </span>
-        </button>
-
-        <button id="testPlusBtn" class="btn gray" type="button">
-          <span class="bi center">
-            <span class="ar" lang="ar">+1</span>
-            <span class="fr" lang="fr">+1</span>
-          </span>
-        </button>
-
-        <button id="testAutoBtn" class="btn warn" type="button">
-          <span class="bi center">
-            <span class="ar" id="testAutoBtnAr" lang="ar">تشغيل الزيادة التلقائية</span>
-            <span class="fr" id="testAutoBtnFr" lang="fr">Démarrer auto</span>
-          </span>
-        </button>
-
-        <button id="testNotifyBtn" class="btn dark" type="button">
-          <span class="bi center">
-            <span class="ar" lang="ar">اختبار إشعار الآن</span>
-            <span class="fr" lang="fr">Tester une notification</span>
-          </span>
-        </button>
-
-        <button id="exitTestBtn" class="btn danger" type="button">
-          <span class="bi center">
-            <span class="ar" lang="ar">إيقاف وضع الاختبار</span>
-            <span class="fr" lang="fr">Quitter le mode test</span>
-          </span>
-        </button>
-      </div>
-    </div>
   </div>
 
   <script>
@@ -579,6 +631,37 @@
     const META_URL = makeUrl("queue/meta");
 
     /***********************
+     * وضع الاختبار (بدون ESP32/بدون Firebase)
+     ***********************/
+    const SIM_MODE = (() => {
+      const url = new URL(location.href);
+      const simParam = url.searchParams.get("sim");
+      // تقدر تثبّت وضع الاختبار عبر localStorage كذلك
+      const simLS = localStorage.getItem("SIM_MODE") === "1";
+      return simParam === "1" || simLS;
+    })();
+
+    const SIM_TICKET_LS = "queue_sim_current_ticket_v1";
+    const simRuntime = {
+      auto: false,
+      autoTimer: null,
+      forceOffline: false,
+      forceClosed: false
+    };
+
+    function setSimMode(enabled) {
+      try {
+        if (enabled) localStorage.setItem("SIM_MODE", "1");
+        else localStorage.removeItem("SIM_MODE");
+      } catch {}
+
+      const url = new URL(location.href);
+      if (enabled) url.searchParams.set("sim", "1");
+      else url.searchParams.delete("sim");
+      location.href = url.toString();
+    }
+
+    /***********************
      * Policy
      ***********************/
     const HEARTBEAT_INTERVAL_MIN = 5;
@@ -598,19 +681,6 @@
      * Notifications policy
      ***********************/
     const NOTIFY_WHEN_VISIBLE = false;
-
-    /***********************
-     * Dev/Test mode (بدون ESP32)
-     ***********************/
-    const urlParams = new URLSearchParams(location.search);
-    const DEV_UI =
-      urlParams.get("dev") === "1" ||
-      urlParams.get("test") === "1";
-
-    const LS_TEST_KEY = "queue_test_mode_v1";
-    const TEST_MODE_DEFAULT =
-      urlParams.get("test") === "1" ||
-      localStorage.getItem(LS_TEST_KEY) === "1";
 
     /***********************
      * Service Worker register
@@ -665,20 +735,18 @@
     const verifyBtnAr = document.getElementById("verifyBtnAr");
     const verifyBtnFr = document.getElementById("verifyBtnFr");
 
-    // Test UI elements
-    const openTestBtn = document.getElementById("openTestBtn");
-    const testPanel = document.getElementById("testPanel");
-    const testTicketInput = document.getElementById("testTicketInput");
-    const testIntervalInput = document.getElementById("testIntervalInput");
-    const testWriteFirebase = document.getElementById("testWriteFirebase");
-    const testApplyBtn = document.getElementById("testApplyBtn");
-    const testMinusBtn = document.getElementById("testMinusBtn");
-    const testPlusBtn = document.getElementById("testPlusBtn");
-    const testAutoBtn = document.getElementById("testAutoBtn");
-    const testAutoBtnAr = document.getElementById("testAutoBtnAr");
-    const testAutoBtnFr = document.getElementById("testAutoBtnFr");
-    const testNotifyBtn = document.getElementById("testNotifyBtn");
-    const exitTestBtn = document.getElementById("exitTestBtn");
+    // Simulation UI
+    const simPanel = document.getElementById("simPanel");
+    const simEnableLink = document.getElementById("simEnableLink");
+    const simTicketInput = document.getElementById("simTicketInput");
+    const simIntervalInput = document.getElementById("simIntervalInput");
+    const simDecBtn = document.getElementById("simDecBtn");
+    const simIncBtn = document.getElementById("simIncBtn");
+    const simAutoBtn = document.getElementById("simAutoBtn");
+    const simResetBtn = document.getElementById("simResetBtn");
+    const simForceOfflineChk = document.getElementById("simForceOfflineChk");
+    const simForceClosedChk = document.getElementById("simForceClosedChk");
+    const simDisableBtn = document.getElementById("simDisableBtn");
 
     /***********************
      * State
@@ -697,9 +765,7 @@
       esp32_last_seen_ms: null,
       last_request_ms: null,
 
-      metaLoaded: false,
-
-      testMode: !!TEST_MODE_DEFAULT
+      metaLoaded: false
     };
 
     /***********************
@@ -715,17 +781,11 @@
         const settings = JSON.parse(raw);
         if (!settings || typeof settings !== "object") return;
 
-        if (
-          typeof settings.myTicket === "string" ||
-          typeof settings.myTicket === "number"
-        ) {
+        if (typeof settings.myTicket === "string" || typeof settings.myTicket === "number") {
           myTicketInput.value = String(settings.myTicket);
         }
 
-        if (
-          typeof settings.threshold === "string" ||
-          typeof settings.threshold === "number"
-        ) {
+        if (typeof settings.threshold === "string" || typeof settings.threshold === "number") {
           thresholdInput.value = String(settings.threshold);
         }
       } catch {}
@@ -768,11 +828,7 @@
       statusText.innerHTML = biHTML(frText, arText);
     }
 
-    function setBanner(
-      frText,
-      arText,
-      { active = true, urgent = false } = {}
-    ) {
+    function setBanner(frText, arText, { active = true, urgent = false } = {}) {
       alertBanner.innerHTML = biHTML(frText, arText);
       alertBanner.classList.toggle("active", !!active);
       alertBanner.classList.toggle("urgent", !!urgent);
@@ -785,10 +841,7 @@
 
     function setVerifyBtnActive(isActive) {
       verifyBtn.classList.toggle("active", !!isActive);
-      verifyBtn.setAttribute(
-        "aria-pressed",
-        isActive ? "true" : "false"
-      );
+      verifyBtn.setAttribute("aria-pressed", isActive ? "true" : "false");
 
       if (isActive) {
         verifyBtnAr.textContent = "إيقاف التتبع";
@@ -803,10 +856,7 @@
 
     function triggerUpdateAnimation() {
       queueNumEl.classList.add("updated");
-
-      setTimeout(() => {
-        queueNumEl.classList.remove("updated");
-      }, 350);
+      setTimeout(() => queueNumEl.classList.remove("updated"), 350);
     }
 
     function setInputsFrozen(frozen) {
@@ -821,33 +871,19 @@
       thresholdInput.disabled = shouldFreeze;
     }
 
-    function refreshTestUIVisibility() {
-      // زر التفعيل يظهر فقط في dev ui + عندما لا نكون داخل test mode
-      openTestBtn.style.display = (DEV_UI && !state.testMode) ? "block" : "none";
-      // لوحة الاختبار تظهر فقط داخل test mode
-      testPanel.style.display = state.testMode ? "block" : "none";
-    }
-
     /***********************
      * Server time
      ***********************/
     async function fetchServerOffset() {
+      // في وضع الاختبار لا نحتاج Firebase
+      if (SIM_MODE) return;
+
       try {
-        const response = await fetch(
-          OFFSET_URL,
-          { cache: "no-store" }
-        );
-
-        if (!response.ok) {
-          throw new Error("offset fetch failed");
-        }
-
+        const response = await fetch(OFFSET_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("offset fetch failed");
         const offset = await response.json();
 
-        if (
-          typeof offset === "number" &&
-          Number.isFinite(offset)
-        ) {
+        if (typeof offset === "number" && Number.isFinite(offset)) {
           state.serverOffset = offset;
         }
       } catch {}
@@ -879,18 +915,8 @@
     function updateStatusUI() {
       statusContainer.classList.remove("online", "closed");
 
-      // وضع اختبار: اعتبره متصل دائماً
-      if (state.testMode) {
-        statusContainer.classList.add("online");
-        setStatus("Mode test (simulation)", "وضع الاختبار (محاكاة)");
-        return;
-      }
-
       if (!state.isOnline) {
-        setStatus(
-          "Hors ligne - Reconnexion...",
-          "غير متصل - جارٍ إعادة الاتصال..."
-        );
+        setStatus("Hors ligne - Reconnexion...", "غير متصل - جارٍ إعادة الاتصال...");
         return;
       }
 
@@ -950,7 +976,6 @@
 
     function setSystemClosed(isClosed) {
       const next = !!isClosed;
-
       if (state.systemClosed === next) return;
 
       state.systemClosed = next;
@@ -970,12 +995,9 @@
     }
 
     function evaluateClosedState() {
-      if (state.testMode) {
-        setSystemClosed(false);
-        return;
-      }
-      if (!state.metaLoaded) return;
+      if (SIM_MODE) return; // في وضع الاختبار لا نطبّق منطق الإغلاق التلقائي
 
+      if (!state.metaLoaded) return;
       const { hbStale, reqStale } = computeClosedReasons();
       setSystemClosed(hbStale || reqStale);
     }
@@ -1019,13 +1041,9 @@
       if (!clamp) return;
 
       const threshold = parseInt(thresholdInput.value, 10);
-
       if (Number.isNaN(threshold)) return;
 
-      const clampedValue = Math.min(
-        Math.max(0, threshold),
-        maxAllowed
-      );
+      const clampedValue = Math.min(Math.max(0, threshold), maxAllowed);
 
       if (clampedValue !== threshold) {
         thresholdInput.value = String(clampedValue);
@@ -1039,29 +1057,20 @@
       if (!("Notification" in window)) return false;
       if (!window.isSecureContext) return false;
 
-      if (Notification.permission === "granted") {
-        return true;
-      }
+      if (Notification.permission === "granted") return true;
+      if (Notification.permission === "denied") return false;
 
-      if (Notification.permission === "denied") {
-        return false;
-      }
-
-      const permission = await Notification
-        .requestPermission()
-        .catch(() => "denied");
-
+      const permission = await Notification.requestPermission().catch(() => "denied");
       return permission === "granted";
     }
 
-    // أضفنا force لتسهيل الاختبار حتى لو الصفحة مرئية
-    async function sendNotification(frText, arText, { urgent = false, tag = "queue-alert", force = false } = {}) {
+    async function sendNotification(frText, arText, { urgent = false, tag = "queue-alert" } = {}) {
       try {
         if (!("Notification" in window)) return false;
         if (!window.isSecureContext) return false;
         if (Notification.permission !== "granted") return false;
 
-        if (!force && !NOTIFY_WHEN_VISIBLE && document.visibilityState === "visible") {
+        if (!NOTIFY_WHEN_VISIBLE && document.visibilityState === "visible") {
           return false;
         }
 
@@ -1100,13 +1109,8 @@
 
     function ensureAudio() {
       if (!audioCtx) {
-        const AudioContextClass =
-          window.AudioContext || window.webkitAudioContext;
-
-        if (!AudioContextClass) {
-          return Promise.resolve();
-        }
-
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return Promise.resolve();
         audioCtx = new AudioContextClass();
       }
 
@@ -1126,16 +1130,10 @@
           const gain = audioCtx.createGain();
 
           oscillator.type = "triangle";
-          oscillator.frequency.setValueAtTime(
-            frequency,
-            time
-          );
+          oscillator.frequency.setValueAtTime(frequency, time);
 
           gain.gain.setValueAtTime(0.25, time);
-          gain.gain.exponentialRampToValueAtTime(
-            0.00001,
-            time + duration
-          );
+          gain.gain.exponentialRampToValueAtTime(0.00001, time + duration);
 
           oscillator.connect(gain);
           gain.connect(audioCtx.destination);
@@ -1145,20 +1143,14 @@
         };
 
         const now = audioCtx.currentTime;
-
         playTone(987.77, now, 0.25);
         playTone(1318.51, now + 0.3, 0.4);
       }).catch(() => {});
     }
 
-    ["pointerdown", "touchstart", "mousedown", "keydown"]
-      .forEach((eventName) => {
-        window.addEventListener(
-          eventName,
-          () => ensureAudio().catch(() => {}),
-          { once: true, passive: true }
-        );
-      });
+    ["pointerdown", "touchstart", "mousedown", "keydown"].forEach((eventName) => {
+      window.addEventListener(eventName, () => ensureAudio().catch(() => {}), { once: true, passive: true });
+    });
 
     /***********************
      * تنبيهات دور المستخدم
@@ -1170,25 +1162,12 @@
         updateThresholdConstraints({ clamp: true });
       }
 
-      const myTicket = parseInt(
-        myTicketInput.value,
-        10
-      );
+      const myTicket = parseInt(myTicketInput.value, 10);
+      const thresholdParsed = parseInt(thresholdInput.value, 10);
 
-      const thresholdParsed = parseInt(
-        thresholdInput.value,
-        10
-      );
+      const threshold = Number.isNaN(thresholdParsed) ? 10 : thresholdParsed;
 
-      const threshold = Number.isNaN(thresholdParsed)
-        ? 10
-        : thresholdParsed;
-
-      if (
-        Number.isNaN(myTicket) ||
-        currentTicket === null ||
-        Number.isNaN(Number(currentTicket))
-      ) {
+      if (Number.isNaN(myTicket) || currentTicket === null || Number.isNaN(Number(currentTicket))) {
         clearBanner();
         state.lastAlertedDiff = null;
         return;
@@ -1236,28 +1215,24 @@
      * Polling احتياطي أثناء التتبع
      ***********************/
     async function pollCurrentTicketOnce() {
-      if (state.testMode) return;
-      if (state.systemClosed || !state.trackingEnabled) {
-        return;
-      }
+      if (SIM_MODE) return; // لا Firebase في وضع الاختبار
+
+      if (state.systemClosed || !state.trackingEnabled) return;
 
       try {
-        const response = await fetch(
-          TICKET_URL,
-          { cache: "no-store" }
-        );
-
-        if (!response.ok) {
-          throw new Error("poll failed");
-        }
-
+        const response = await fetch(TICKET_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("poll failed");
         const ticket = await response.json();
         setTicket(ticket);
       } catch {}
     }
 
     function startPolling() {
-      if (state.testMode) return;
+      // في وضع الاختبار ما نحتاج polling
+      if (SIM_MODE) {
+        stopPolling();
+        return;
+      }
 
       stopPolling();
 
@@ -1266,11 +1241,7 @@
           ? POLL_VISIBLE_MS
           : POLL_HIDDEN_MS;
 
-      pollTimer = setInterval(
-        pollCurrentTicketOnce,
-        period
-      );
-
+      pollTimer = setInterval(pollCurrentTicketOnce, period);
       pollCurrentTicketOnce();
     }
 
@@ -1278,34 +1249,16 @@
      * زر واحد: بدء / إيقاف التتبع
      ***********************/
     function inputsAreValidOrShowMessage() {
-      const myTicket = parseInt(
-        myTicketInput.value,
-        10
-      );
-
-      const threshold = parseInt(
-        thresholdInput.value,
-        10
-      );
+      const myTicket = parseInt(myTicketInput.value, 10);
+      const threshold = parseInt(thresholdInput.value, 10);
 
       if (Number.isNaN(myTicket) || myTicket < 1) {
-        setBanner(
-          "Veuillez saisir un numéro de ticket valide.",
-          "يرجى إدخال رقم صف صحيح.",
-          { active: true, urgent: true }
-        );
+        setBanner("Veuillez saisir un numéro de ticket valide.", "يرجى إدخال رقم صف صحيح.", { active: true, urgent: true });
         return false;
       }
 
-      if (
-        Number.isNaN(threshold) ||
-        threshold < 0
-      ) {
-        setBanner(
-          "Veuillez saisir une marge d'alerte valide (>= 0).",
-          "يرجى إدخال هامش تنبيه صحيح (>= 0).",
-          { active: true, urgent: true }
-        );
+      if (Number.isNaN(threshold) || threshold < 0) {
+        setBanner("Veuillez saisir une marge d'alerte valide (>= 0).", "يرجى إدخال هامش تنبيه صحيح (>= 0).", { active: true, urgent: true });
         return false;
       }
 
@@ -1336,95 +1289,45 @@
       checkUserAlert(state.current_ticket);
     }
 
-    verifyBtn.addEventListener(
-      "click",
-      toggleTracking
-    );
+    verifyBtn.addEventListener("click", toggleTracking);
 
-    myTicketInput.addEventListener(
-      "input",
-      () => {
-        stopTrackingHard();
-      }
-    );
+    myTicketInput.addEventListener("input", () => stopTrackingHard());
 
-    thresholdInput.addEventListener(
-      "input",
-      () => {
-        stopTrackingHard();
+    thresholdInput.addEventListener("input", () => {
+      stopTrackingHard();
+      updateThresholdConstraints({ clamp: !state.userEditing });
+    });
 
-        updateThresholdConstraints({
-          clamp: !state.userEditing
-        });
-      }
-    );
+    myTicketInput.addEventListener("focus", () => { state.userEditing = true; });
+    myTicketInput.addEventListener("blur", () => {
+      state.userEditing = false;
+      updateThresholdConstraints({ clamp: true });
+      saveSettings();
+    });
 
-    myTicketInput.addEventListener(
-      "focus",
-      () => {
-        state.userEditing = true;
-      }
-    );
-
-    myTicketInput.addEventListener(
-      "blur",
-      () => {
-        state.userEditing = false;
-        updateThresholdConstraints({ clamp: true });
-        saveSettings();
-      }
-    );
-
-    thresholdInput.addEventListener(
-      "focus",
-      () => {
-        state.userEditing = true;
-      }
-    );
-
-    thresholdInput.addEventListener(
-      "blur",
-      () => {
-        state.userEditing = false;
-        updateThresholdConstraints({ clamp: true });
-        saveSettings();
-      }
-    );
+    thresholdInput.addEventListener("focus", () => { state.userEditing = true; });
+    thresholdInput.addEventListener("blur", () => {
+      state.userEditing = false;
+      updateThresholdConstraints({ clamp: true });
+      saveSettings();
+    });
 
     /***********************
      * عرض رقم الصف
      ***********************/
     function setTicket(value) {
-      if (
-        value === null ||
-        typeof value === "undefined"
-      ) {
-        return;
-      }
+      if (value === null || typeof value === "undefined") return;
 
       const oldShown = queueNumEl.textContent;
 
       state.current_ticket = Number(value);
       renderTicketNumber();
 
-      // مزامنة قيمة لوحة الاختبار (لو مفعلة)
-      if (state.testMode && testTicketInput) {
-        testTicketInput.value = String(state.current_ticket);
-      }
-
-      if (
-        state.trackingEnabled &&
-        !state.userEditing &&
-        !state.systemClosed
-      ) {
+      if (state.trackingEnabled && !state.userEditing && !state.systemClosed) {
         checkUserAlert(state.current_ticket);
       }
 
-      if (
-        !state.systemClosed &&
-        oldShown !== "--" &&
-        oldShown !== String(state.current_ticket)
-      ) {
+      if (!state.systemClosed && oldShown !== "--" && oldShown !== String(state.current_ticket)) {
         triggerUpdateAnimation();
       }
     }
@@ -1433,28 +1336,16 @@
      * جلب بيانات حالة النظام
      ***********************/
     async function fetchMetaOnce() {
-      if (state.testMode) return;
+      if (SIM_MODE) return;
 
       try {
-        const response = await fetch(
-          META_URL,
-          { cache: "no-store" }
-        );
-
+        const response = await fetch(META_URL, { cache: "no-store" });
         if (response.ok) {
           const meta = await response.json();
 
           if (meta && typeof meta === "object") {
-            if ("esp32_last_seen_ms" in meta) {
-              state.esp32_last_seen_ms =
-                meta.esp32_last_seen_ms;
-            }
-
-            if ("last_request_ms" in meta) {
-              state.last_request_ms =
-                meta.last_request_ms;
-            }
-
+            if ("esp32_last_seen_ms" in meta) state.esp32_last_seen_ms = meta.esp32_last_seen_ms;
+            if ("last_request_ms" in meta) state.last_request_ms = meta.last_request_ms;
             state.metaLoaded = true;
           }
         }
@@ -1471,7 +1362,6 @@
 
     function scheduleReconnect() {
       if (reconnectTimer) return;
-
       reconnectTimer = setTimeout(() => {
         reconnectTimer = null;
         connectStream();
@@ -1479,44 +1369,21 @@
     }
 
     function applyStreamPayload(payload) {
-      if (
-        !payload ||
-        typeof payload !== "object"
-      ) {
-        return;
-      }
+      if (!payload || typeof payload !== "object") return;
 
       const { path, data } = payload;
 
       if (path === "/") {
         if (data && typeof data === "object") {
-          if ("current_ticket" in data) {
-            setTicket(data.current_ticket);
-          }
+          if ("current_ticket" in data) setTicket(data.current_ticket);
 
-          if (
-            data.meta &&
-            typeof data.meta === "object"
-          ) {
-            if (
-              "esp32_last_seen_ms" in data.meta
-            ) {
-              state.esp32_last_seen_ms =
-                data.meta.esp32_last_seen_ms;
-            }
-
-            if (
-              "last_request_ms" in data.meta
-            ) {
-              state.last_request_ms =
-                data.meta.last_request_ms;
-            }
-
+          if (data.meta && typeof data.meta === "object") {
+            if ("esp32_last_seen_ms" in data.meta) state.esp32_last_seen_ms = data.meta.esp32_last_seen_ms;
+            if ("last_request_ms" in data.meta) state.last_request_ms = data.meta.last_request_ms;
             state.metaLoaded = true;
             evaluateClosedState();
           }
         }
-
         return;
       }
 
@@ -1527,69 +1394,38 @@
 
       if (path === "/meta") {
         if (data && typeof data === "object") {
-          if ("esp32_last_seen_ms" in data) {
-            state.esp32_last_seen_ms =
-              data.esp32_last_seen_ms;
-          }
-
-          if ("last_request_ms" in data) {
-            state.last_request_ms =
-              data.last_request_ms;
-          }
-
+          if ("esp32_last_seen_ms" in data) state.esp32_last_seen_ms = data.esp32_last_seen_ms;
+          if ("last_request_ms" in data) state.last_request_ms = data.last_request_ms;
           state.metaLoaded = true;
           evaluateClosedState();
         }
-
         return;
       }
 
-      if (
-        path === "/meta/esp32_last_seen_ms"
-      ) {
+      if (path === "/meta/esp32_last_seen_ms") {
         state.esp32_last_seen_ms = data;
         state.metaLoaded = true;
         evaluateClosedState();
         return;
       }
 
-      if (
-        path === "/meta/last_request_ms"
-      ) {
+      if (path === "/meta/last_request_ms") {
         state.last_request_ms = data;
         state.metaLoaded = true;
         evaluateClosedState();
       }
     }
 
-    function closeFirebaseConnections() {
+    function connectStream() {
+      if (SIM_MODE) return;
+
       if (es) {
         try { es.close(); } catch {}
         es = null;
       }
-      if (reconnectTimer) {
-        clearTimeout(reconnectTimer);
-        reconnectTimer = null;
-      }
-      cancelOfflineUI();
-    }
-
-    function connectStream() {
-      if (state.testMode) return;
-
-      if (es) {
-        try {
-          es.close();
-        } catch {}
-
-        es = null;
-      }
 
       if (!state.isOnline) {
-        setStatus(
-          "Connexion au système...",
-          "جارٍ الاتصال بالنظام..."
-        );
+        setStatus("Connexion au système...", "جارٍ الاتصال بالنظام...");
       }
 
       try {
@@ -1600,34 +1436,16 @@
           setOnline(true);
         };
 
-        es.addEventListener(
-          "put",
-          (event) => {
-            try {
-              applyStreamPayload(
-                JSON.parse(event.data)
-              );
-            } catch {}
-          }
-        );
+        es.addEventListener("put", (event) => {
+          try { applyStreamPayload(JSON.parse(event.data)); } catch {}
+        });
 
-        es.addEventListener(
-          "patch",
-          (event) => {
-            try {
-              applyStreamPayload(
-                JSON.parse(event.data)
-              );
-            } catch {}
-          }
-        );
+        es.addEventListener("patch", (event) => {
+          try { applyStreamPayload(JSON.parse(event.data)); } catch {}
+        });
 
         es.onmessage = (event) => {
-          try {
-            applyStreamPayload(
-              JSON.parse(event.data)
-            );
-          } catch {}
+          try { applyStreamPayload(JSON.parse(event.data)); } catch {}
         };
 
         es.onerror = () => {
@@ -1644,43 +1462,20 @@
      * Initial fetch
      ***********************/
     async function initialFetch() {
-      if (state.testMode) return;
+      if (SIM_MODE) return;
 
       try {
-        const response = await fetch(
-          QUEUE_URL,
-          { cache: "no-store" }
-        );
+        const response = await fetch(QUEUE_URL, { cache: "no-store" });
 
         if (response.ok) {
           const data = await response.json();
 
-          if (
-            data &&
-            typeof data === "object"
-          ) {
-            if ("current_ticket" in data) {
-              setTicket(data.current_ticket);
-            }
+          if (data && typeof data === "object") {
+            if ("current_ticket" in data) setTicket(data.current_ticket);
 
-            if (
-              data.meta &&
-              typeof data.meta === "object"
-            ) {
-              if (
-                "esp32_last_seen_ms" in data.meta
-              ) {
-                state.esp32_last_seen_ms =
-                  data.meta.esp32_last_seen_ms;
-              }
-
-              if (
-                "last_request_ms" in data.meta
-              ) {
-                state.last_request_ms =
-                  data.meta.last_request_ms;
-              }
-
+            if (data.meta && typeof data.meta === "object") {
+              if ("esp32_last_seen_ms" in data.meta) state.esp32_last_seen_ms = data.meta.esp32_last_seen_ms;
+              if ("last_request_ms" in data.meta) state.last_request_ms = data.meta.last_request_ms;
               state.metaLoaded = true;
             }
           }
@@ -1694,248 +1489,189 @@
       }
     }
 
-    /***********************
-     * Test mode helpers (اختبار بدون ESP32)
-     ***********************/
-    let testAutoTimer = null;
-    let testMetaHeartbeatTimer = null;
-
-    function setTestAutoBtnState(running) {
-      if (running) {
-        testAutoBtnAr.textContent = "إيقاف الزيادة التلقائية";
-        testAutoBtnFr.textContent = "Arrêter auto";
-      } else {
-        testAutoBtnAr.textContent = "تشغيل الزيادة التلقائية";
-        testAutoBtnFr.textContent = "Démarrer auto";
-      }
-    }
-
-    async function fbJson(method, url, data) {
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-      return res.ok;
-    }
-
-    async function touchMetaOnFirebase() {
-      // تحديث meta حتى لا يعتبر "مغلق" على الأجهزة الأخرى
-      const now = serverNow();
-      try {
-        await fbJson("PATCH", META_URL, {
-          esp32_last_seen_ms: now,
-          last_request_ms: now
-        });
-      } catch {}
-    }
-
-    async function writeTicketToFirebase(ticket) {
-      try {
-        await fbJson("PUT", TICKET_URL, Number(ticket));
-      } catch {}
-    }
-
-    function startTestMetaHeartbeatIfNeeded() {
-      if (!state.testMode) return;
-
-      if (!testWriteFirebase.checked) {
-        if (testMetaHeartbeatTimer) {
-          clearInterval(testMetaHeartbeatTimer);
-          testMetaHeartbeatTimer = null;
-        }
-        return;
-      }
-
-      if (testMetaHeartbeatTimer) return;
-
-      testMetaHeartbeatTimer = setInterval(() => {
-        if (!state.testMode) return;
-        if (!testWriteFirebase.checked) return;
-        touchMetaOnFirebase().catch(() => {});
-      }, 60 * 1000);
-
-      touchMetaOnFirebase().catch(() => {});
-    }
-
-    async function applyTestTicket(rawValue) {
-      const n = Math.max(1, parseInt(rawValue, 10) || 1);
-
-      setSystemClosed(false);
-      setOnline(true);
-
-      setTicket(n);
-
-      if (testWriteFirebase.checked) {
-        await writeTicketToFirebase(n);
-        await touchMetaOnFirebase();
-      }
-    }
-
-    function enableTestMode() {
-      state.testMode = true;
-      localStorage.setItem(LS_TEST_KEY, "1");
-
-      // أوقف أي اتصالات Firebase
-      closeFirebaseConnections();
-      stopPolling();
-
-      // اعتبره متصل ومفتوح
-      state.metaLoaded = true;
-      setOnline(true);
-      setSystemClosed(false);
-
-      // رقم افتراضي إن لم يوجد
-      if (!Number.isFinite(Number(state.current_ticket))) {
-        setTicket(1);
-      }
-
-      refreshTestUIVisibility();
-      startTestMetaHeartbeatIfNeeded();
-      updateStatusUI();
-    }
-
-    function exitTestMode() {
-      // أوقف التايمرات
-      if (testAutoTimer) {
-        clearInterval(testAutoTimer);
-        testAutoTimer = null;
-      }
-      if (testMetaHeartbeatTimer) {
-        clearInterval(testMetaHeartbeatTimer);
-        testMetaHeartbeatTimer = null;
-      }
-
-      localStorage.removeItem(LS_TEST_KEY);
-
-      // أعد تحميل الصفحة بدون ?test=1
-      const url = new URL(location.href);
-      url.searchParams.delete("test");
-      location.href = url.toString();
-    }
-
-    function toggleTestAuto() {
-      if (testAutoTimer) {
-        clearInterval(testAutoTimer);
-        testAutoTimer = null;
-        setTestAutoBtnState(false);
-        return;
-      }
-
-      const seconds = Math.max(1, parseInt(testIntervalInput.value, 10) || 5);
-      setTestAutoBtnState(true);
-
-      testAutoTimer = setInterval(() => {
-        const current = Number(state.current_ticket);
-        const next = Number.isFinite(current) ? current + 1 : 1;
-        applyTestTicket(next).catch(() => {});
-      }, seconds * 1000);
-    }
-
-    /***********************
-     * Test UI events
-     ***********************/
-    openTestBtn.addEventListener("click", () => {
-      enableTestMode();
-    });
-
-    testApplyBtn.addEventListener("click", () => {
-      applyTestTicket(testTicketInput.value).catch(() => {});
-    });
-
-    testMinusBtn.addEventListener("click", () => {
-      const current = parseInt(testTicketInput.value, 10);
-      const next = Math.max(1, (Number.isNaN(current) ? 1 : current) - 1);
-      applyTestTicket(next).catch(() => {});
-    });
-
-    testPlusBtn.addEventListener("click", () => {
-      const current = parseInt(testTicketInput.value, 10);
-      const next = (Number.isNaN(current) ? 1 : current) + 1;
-      applyTestTicket(next).catch(() => {});
-    });
-
-    testAutoBtn.addEventListener("click", () => {
-      toggleTestAuto();
-    });
-
-    testWriteFirebase.addEventListener("change", () => {
-      startTestMetaHeartbeatIfNeeded();
-    });
-
-    testNotifyBtn.addEventListener("click", async () => {
-      await registerServiceWorker().catch(() => {});
-      const ok = await ensureNotificationsEnabled().catch(() => false);
-      if (!ok) return;
-
-      // force:true حتى يظهر فوراً أثناء فتح الصفحة
-      await sendNotification(
-        "Notification de test (mode test)",
-        "إشعار تجريبي (وضع الاختبار)",
-        { urgent: false, tag: "test-notif", force: true }
-      ).catch(() => {});
-    });
-
-    exitTestBtn.addEventListener("click", () => {
-      exitTestMode();
-    });
-
-    /***********************
-     * Timers / visibility
-     ***********************/
+    // لا تفحص الإغلاق التلقائي في وضع الاختبار
     setInterval(() => {
-      if (state.testMode) return;
+      if (SIM_MODE) return;
       if (!state.metaLoaded) return;
       evaluateClosedState();
     }, CHECK_MS);
 
-    document.addEventListener(
-      "visibilitychange",
-      async () => {
-        if (state.testMode) return;
+    document.addEventListener("visibilitychange", async () => {
+      if (SIM_MODE) return;
 
-        if (document.visibilityState === "visible") {
-          await fetchServerOffset();
-          await initialFetch();
-          connectStream();
-        }
-
-        if (state.trackingEnabled && !state.systemClosed) {
-          startPolling();
-        } else {
-          stopPolling();
-        }
-      }
-    );
-
-    /***********************
-     * Start
-     ***********************/
-    (async function start() {
-      loadSettings();
-
-      setStatus(
-        "Connexion en cours...",
-        "جارٍ الاتصال..."
-      );
-
-      registerServiceWorker().catch(() => {});
-
-      await fetchServerOffset();
-
-      // إظهار/إخفاء واجهة الاختبار حسب الروابط/الحالة
-      refreshTestUIVisibility();
-
-      if (state.testMode) {
-        enableTestMode();
-        // املأ مدخل الاختبار بالقيمة الحالية
-        testTicketInput.value = String(Number.isFinite(Number(state.current_ticket)) ? state.current_ticket : 1);
-        setTestAutoBtnState(false);
-      } else {
+      if (document.visibilityState === "visible") {
+        await fetchServerOffset();
         await initialFetch();
         connectStream();
       }
 
+      if (state.trackingEnabled && !state.systemClosed) {
+        startPolling();
+      } else {
+        stopPolling();
+      }
+    });
+
+    /***********************
+     * Simulation mode logic
+     ***********************/
+    function setupSimUiVisibility() {
+      if (SIM_MODE) {
+        simPanel.style.display = "block";
+        simPanel.open = true;
+        simEnableLink.style.display = "none";
+      } else {
+        simPanel.style.display = "none";
+        simEnableLink.style.display = "inline-block";
+      }
+
+      simEnableLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        setSimMode(true);
+      });
+
+      simDisableBtn.addEventListener("click", () => setSimMode(false));
+    }
+
+    function simSetTicket(value) {
+      const num = Number(value);
+      const safe = Number.isFinite(num) ? Math.max(0, Math.floor(num)) : 0;
+      setTicket(safe);
+
+      try { localStorage.setItem(SIM_TICKET_LS, String(safe)); } catch {}
+      // في وضع الاختبار اعتبر النظام "نشط"
+      state.metaLoaded = true;
+      state.esp32_last_seen_ms = serverNow();
+      state.last_request_ms = serverNow();
+    }
+
+    function simUpdateStatusFromToggles() {
+      simRuntime.forceOffline = !!simForceOfflineChk.checked;
+      simRuntime.forceClosed = !!simForceClosedChk.checked;
+
+      if (simRuntime.forceOffline) setOnline(false);
+      else setOnline(true);
+
+      setSystemClosed(simRuntime.forceClosed);
+    }
+
+    function simStopAuto() {
+      simRuntime.auto = false;
+      if (simRuntime.autoTimer) {
+        clearInterval(simRuntime.autoTimer);
+        simRuntime.autoTimer = null;
+      }
+      simAutoBtn.textContent = "Auto: OFF";
+    }
+
+    function simStartAuto() {
+      simStopAuto();
+      simRuntime.auto = true;
+
+      const interval = Math.max(200, parseInt(simIntervalInput.value, 10) || 2500);
+
+      simRuntime.autoTimer = setInterval(() => {
+        if (simRuntime.forceClosed) return;
+        if (simRuntime.forceOffline) return;
+        simSetTicket((state.current_ticket ?? 0) + 1);
+        simTicketInput.value = String(state.current_ticket ?? 0);
+      }, interval);
+
+      simAutoBtn.textContent = "Auto: ON";
+    }
+
+    function setupSimulationControls() {
+      // initial ticket from LS
+      let initial = 1;
+      try {
+        const saved = Number(localStorage.getItem(SIM_TICKET_LS));
+        if (Number.isFinite(saved)) initial = Math.max(0, Math.floor(saved));
+      } catch {}
+
+      simTicketInput.value = String(initial);
+      simSetTicket(initial);
+
+      // show as online/open by default
+      setOnline(true);
+      state.metaLoaded = true;
+      setSystemClosed(false);
+
+      simForceOfflineChk.checked = false;
+      simForceClosedChk.checked = false;
+
+      simTicketInput.addEventListener("input", () => {
+        simSetTicket(simTicketInput.value);
+      });
+
+      simDecBtn.addEventListener("click", () => {
+        simSetTicket((state.current_ticket ?? 0) - 1);
+        simTicketInput.value = String(state.current_ticket ?? 0);
+      });
+
+      simIncBtn.addEventListener("click", () => {
+        simSetTicket((state.current_ticket ?? 0) + 1);
+        simTicketInput.value = String(state.current_ticket ?? 0);
+      });
+
+      simAutoBtn.addEventListener("click", () => {
+        if (simRuntime.auto) simStopAuto();
+        else simStartAuto();
+      });
+
+      simResetBtn.addEventListener("click", () => {
+        simStopAuto();
+        simForceOfflineChk.checked = false;
+        simForceClosedChk.checked = false;
+        simUpdateStatusFromToggles();
+        simSetTicket(1);
+        simTicketInput.value = "1";
+      });
+
+      simForceOfflineChk.addEventListener("change", () => simUpdateStatusFromToggles());
+      simForceClosedChk.addEventListener("change", () => simUpdateStatusFromToggles());
+
+      // keep meta "fresh" to avoid any accidental close logic (even though it's disabled in SIM_MODE)
+      setInterval(() => {
+        if (!SIM_MODE) return;
+        state.esp32_last_seen_ms = serverNow();
+        state.last_request_ms = serverNow();
+      }, 60 * 1000);
+    }
+
+    /***********************
+     * App start
+     ***********************/
+    (async function start() {
+      loadSettings();
+      setupSimUiVisibility();
+
+      setStatus("Connexion en cours...", "جارٍ الاتصال...");
+
+      // SW optional
+      registerServiceWorker().catch(() => {});
+
+      if (SIM_MODE) {
+        // في وضع الاختبار: لا Firebase
+        setOnline(true);
+        state.metaLoaded = true;
+        setSystemClosed(false);
+
+        setupSimulationControls();
+
+        renderTicketNumber();
+        updateStatusUI();
+        setInputsFrozen(false);
+        updateThresholdConstraints({ clamp: true });
+
+        // ضع رسالة مناسبة بدل "connecting"
+        setStatus("Mode test activé", "تم تفعيل وضع الاختبار");
+        return;
+      }
+
+      await fetchServerOffset();
+      await initialFetch();
+
+      connectStream();
       renderTicketNumber();
       updateStatusUI();
 
