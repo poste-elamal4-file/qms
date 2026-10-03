@@ -264,6 +264,35 @@
       filter:none;
     }
 
+    /* أزرار إضافية للوحة الاختبار */
+    .test-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      justify-content:center;
+      margin-top:6px;
+    }
+    .test-actions .btn{
+      margin:0;
+      max-width:none;
+      flex:1 1 140px;
+    }
+    .btn.gray{ background:#6b7280; }
+    .btn.dark{ background:#111827; }
+    .btn.warn{ background:#f59e0b; color:#111827; }
+    .btn.danger{ background:#dc2626; }
+    .test-checkbox{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin:10px 0 2px;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+    }
+    .test-checkbox input{ transform:scale(1.1); }
+
     .alert-banner{
       display:none;
       background-color:var(--warn-bg);
@@ -430,6 +459,96 @@
       <span class="status-dot" aria-hidden="true"></span>
       <div id="statusText" style="width:100%;"></div>
     </div>
+
+    <!-- زر إظهار وضع الاختبار (يظهر فقط عند ?dev=1 أو ?test=1) -->
+    <button id="openTestBtn" class="btn dark" type="button" style="display:none; margin-top:12px;">
+      <span class="bi center">
+        <span class="ar" lang="ar">تفعيل وضع الاختبار</span>
+        <span class="fr" lang="fr">Activer le mode test</span>
+      </span>
+    </button>
+
+    <!-- لوحة وضع الاختبار (تظهر عند تفعيل test mode) -->
+    <div class="user-section" id="testPanel" style="display:none; margin-top:14px;">
+      <h3>
+        <span class="bi center">
+          <span class="ar" lang="ar">وضع الاختبار (بدون ESP32)</span>
+          <span class="fr" lang="fr">Mode test (sans ESP32)</span>
+        </span>
+      </h3>
+
+      <div class="input-group">
+        <label for="testTicketInput">
+          <span class="bi">
+            <span class="ar" lang="ar">رقم الصف الحالي (محاكاة)</span>
+            <span class="fr" lang="fr">Ticket actuel (simulation)</span>
+          </span>
+        </label>
+        <input type="number" id="testTicketInput" min="1" step="1" inputmode="numeric" />
+      </div>
+
+      <div class="input-group">
+        <label for="testIntervalInput">
+          <span class="bi">
+            <span class="ar" lang="ar">كل كم ثانية يزيد الرقم تلقائيًا</span>
+            <span class="fr" lang="fr">Incrément auto (secondes)</span>
+          </span>
+        </label>
+        <input type="number" id="testIntervalInput" min="1" step="1" value="5" inputmode="numeric" />
+      </div>
+
+      <div class="test-checkbox">
+        <input type="checkbox" id="testWriteFirebase" />
+        <span class="bi">
+          <span class="ar" lang="ar">اكتب إلى Firebase (ليظهر للجميع)</span>
+          <span class="fr" lang="fr">Écrire sur Firebase (visible par tous)</span>
+        </span>
+      </div>
+
+      <div class="test-actions">
+        <button id="testApplyBtn" class="btn" type="button">
+          <span class="bi center">
+            <span class="ar" lang="ar">تطبيق الرقم</span>
+            <span class="fr" lang="fr">Appliquer</span>
+          </span>
+        </button>
+
+        <button id="testMinusBtn" class="btn gray" type="button">
+          <span class="bi center">
+            <span class="ar" lang="ar">-1</span>
+            <span class="fr" lang="fr">-1</span>
+          </span>
+        </button>
+
+        <button id="testPlusBtn" class="btn gray" type="button">
+          <span class="bi center">
+            <span class="ar" lang="ar">+1</span>
+            <span class="fr" lang="fr">+1</span>
+          </span>
+        </button>
+
+        <button id="testAutoBtn" class="btn warn" type="button">
+          <span class="bi center">
+            <span class="ar" id="testAutoBtnAr" lang="ar">تشغيل الزيادة التلقائية</span>
+            <span class="fr" id="testAutoBtnFr" lang="fr">Démarrer auto</span>
+          </span>
+        </button>
+
+        <button id="testNotifyBtn" class="btn dark" type="button">
+          <span class="bi center">
+            <span class="ar" lang="ar">اختبار إشعار الآن</span>
+            <span class="fr" lang="fr">Tester une notification</span>
+          </span>
+        </button>
+
+        <button id="exitTestBtn" class="btn danger" type="button">
+          <span class="bi center">
+            <span class="ar" lang="ar">إيقاف وضع الاختبار</span>
+            <span class="fr" lang="fr">Quitter le mode test</span>
+          </span>
+        </button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -478,8 +597,20 @@
     /***********************
      * Notifications policy
      ***********************/
-    // إذا false: لا نرسل إشعارًا عندما تكون الصفحة ظاهرة (تجنب الإزعاج)
     const NOTIFY_WHEN_VISIBLE = false;
+
+    /***********************
+     * Dev/Test mode (بدون ESP32)
+     ***********************/
+    const urlParams = new URLSearchParams(location.search);
+    const DEV_UI =
+      urlParams.get("dev") === "1" ||
+      urlParams.get("test") === "1";
+
+    const LS_TEST_KEY = "queue_test_mode_v1";
+    const TEST_MODE_DEFAULT =
+      urlParams.get("test") === "1" ||
+      localStorage.getItem(LS_TEST_KEY) === "1";
 
     /***********************
      * Service Worker register
@@ -489,7 +620,6 @@
     async function registerServiceWorker() {
       try {
         if (!("serviceWorker" in navigator)) return false;
-        // التسجيل مبكرًا يساعد Android Chrome
         await navigator.serviceWorker.register(SW_URL);
         return true;
       } catch {
@@ -535,6 +665,21 @@
     const verifyBtnAr = document.getElementById("verifyBtnAr");
     const verifyBtnFr = document.getElementById("verifyBtnFr");
 
+    // Test UI elements
+    const openTestBtn = document.getElementById("openTestBtn");
+    const testPanel = document.getElementById("testPanel");
+    const testTicketInput = document.getElementById("testTicketInput");
+    const testIntervalInput = document.getElementById("testIntervalInput");
+    const testWriteFirebase = document.getElementById("testWriteFirebase");
+    const testApplyBtn = document.getElementById("testApplyBtn");
+    const testMinusBtn = document.getElementById("testMinusBtn");
+    const testPlusBtn = document.getElementById("testPlusBtn");
+    const testAutoBtn = document.getElementById("testAutoBtn");
+    const testAutoBtnAr = document.getElementById("testAutoBtnAr");
+    const testAutoBtnFr = document.getElementById("testAutoBtnFr");
+    const testNotifyBtn = document.getElementById("testNotifyBtn");
+    const exitTestBtn = document.getElementById("exitTestBtn");
+
     /***********************
      * State
      ***********************/
@@ -552,7 +697,9 @@
       esp32_last_seen_ms: null,
       last_request_ms: null,
 
-      metaLoaded: false
+      metaLoaded: false,
+
+      testMode: !!TEST_MODE_DEFAULT
     };
 
     /***********************
@@ -674,6 +821,13 @@
       thresholdInput.disabled = shouldFreeze;
     }
 
+    function refreshTestUIVisibility() {
+      // زر التفعيل يظهر فقط في dev ui + عندما لا نكون داخل test mode
+      openTestBtn.style.display = (DEV_UI && !state.testMode) ? "block" : "none";
+      // لوحة الاختبار تظهر فقط داخل test mode
+      testPanel.style.display = state.testMode ? "block" : "none";
+    }
+
     /***********************
      * Server time
      ***********************/
@@ -724,6 +878,13 @@
 
     function updateStatusUI() {
       statusContainer.classList.remove("online", "closed");
+
+      // وضع اختبار: اعتبره متصل دائماً
+      if (state.testMode) {
+        statusContainer.classList.add("online");
+        setStatus("Mode test (simulation)", "وضع الاختبار (محاكاة)");
+        return;
+      }
 
       if (!state.isOnline) {
         setStatus(
@@ -809,6 +970,10 @@
     }
 
     function evaluateClosedState() {
+      if (state.testMode) {
+        setSystemClosed(false);
+        return;
+      }
       if (!state.metaLoaded) return;
 
       const { hbStale, reqStale } = computeClosedReasons();
@@ -889,24 +1054,23 @@
       return permission === "granted";
     }
 
-    async function sendNotification(frText, arText, { urgent = false, tag = "queue-alert" } = {}) {
+    // أضفنا force لتسهيل الاختبار حتى لو الصفحة مرئية
+    async function sendNotification(frText, arText, { urgent = false, tag = "queue-alert", force = false } = {}) {
       try {
         if (!("Notification" in window)) return false;
         if (!window.isSecureContext) return false;
         if (Notification.permission !== "granted") return false;
 
-        if (!NOTIFY_WHEN_VISIBLE && document.visibilityState === "visible") {
+        if (!force && !NOTIFY_WHEN_VISIBLE && document.visibilityState === "visible") {
           return false;
         }
 
         const title = urgent ? "تنبيه / Alerte" : "إشعار / Notification";
         const body = `${arText}\n${frText}`;
 
-        // الأفضل للموبايل: Service Worker
         if ("serviceWorker" in navigator) {
           let reg = await navigator.serviceWorker.getRegistration();
           if (!reg) {
-            // محاولة تسجيل سريع (خصوصًا عند أول زيارة)
             try { reg = await navigator.serviceWorker.register(SW_URL); } catch {}
           }
           if (reg && reg.showNotification) {
@@ -922,7 +1086,6 @@
           }
         }
 
-        // fallback (غالبًا Desktop فقط)
         new Notification(title, { body, tag, renotify: true, icon: "logo.png" });
         return true;
       } catch {
@@ -1040,7 +1203,6 @@
 
         if (state.lastAlertedDiff !== 0) {
           playAlertBeep();
-          // إشعار عبر Service Worker
           sendNotification(fr, ar, { urgent: true, tag: "queue-urgent" }).catch(() => {});
           state.lastAlertedDiff = 0;
         }
@@ -1059,7 +1221,6 @@
         const ar = "لقد فات دورك.";
         setBanner(fr, ar, { active: true, urgent: true });
 
-        // لمنع الإزعاج: أرسل مرة واحدة فقط عند أول دخول diff < 0
         if (state.lastAlertedDiff === null || state.lastAlertedDiff >= 0) {
           sendNotification(fr, ar, { urgent: true, tag: "queue-missed" }).catch(() => {});
         }
@@ -1075,6 +1236,7 @@
      * Polling احتياطي أثناء التتبع
      ***********************/
     async function pollCurrentTicketOnce() {
+      if (state.testMode) return;
       if (state.systemClosed || !state.trackingEnabled) {
         return;
       }
@@ -1095,6 +1257,8 @@
     }
 
     function startPolling() {
+      if (state.testMode) return;
+
       stopPolling();
 
       const period =
@@ -1165,7 +1329,6 @@
 
       setVerifyBtnActive(true);
 
-      // جهّز SW مبكرًا + اطلب الإذن (بدون انتظار)
       registerServiceWorker().catch(() => {});
       ensureNotificationsEnabled().catch(() => {});
 
@@ -1244,6 +1407,11 @@
       state.current_ticket = Number(value);
       renderTicketNumber();
 
+      // مزامنة قيمة لوحة الاختبار (لو مفعلة)
+      if (state.testMode && testTicketInput) {
+        testTicketInput.value = String(state.current_ticket);
+      }
+
       if (
         state.trackingEnabled &&
         !state.userEditing &&
@@ -1265,6 +1433,8 @@
      * جلب بيانات حالة النظام
      ***********************/
     async function fetchMetaOnce() {
+      if (state.testMode) return;
+
       try {
         const response = await fetch(
           META_URL,
@@ -1392,7 +1562,21 @@
       }
     }
 
+    function closeFirebaseConnections() {
+      if (es) {
+        try { es.close(); } catch {}
+        es = null;
+      }
+      if (reconnectTimer) {
+        clearTimeout(reconnectTimer);
+        reconnectTimer = null;
+      }
+      cancelOfflineUI();
+    }
+
     function connectStream() {
+      if (state.testMode) return;
+
       if (es) {
         try {
           es.close();
@@ -1460,6 +1644,8 @@
      * Initial fetch
      ***********************/
     async function initialFetch() {
+      if (state.testMode) return;
+
       try {
         const response = await fetch(
           QUEUE_URL,
@@ -1508,7 +1694,197 @@
       }
     }
 
+    /***********************
+     * Test mode helpers (اختبار بدون ESP32)
+     ***********************/
+    let testAutoTimer = null;
+    let testMetaHeartbeatTimer = null;
+
+    function setTestAutoBtnState(running) {
+      if (running) {
+        testAutoBtnAr.textContent = "إيقاف الزيادة التلقائية";
+        testAutoBtnFr.textContent = "Arrêter auto";
+      } else {
+        testAutoBtnAr.textContent = "تشغيل الزيادة التلقائية";
+        testAutoBtnFr.textContent = "Démarrer auto";
+      }
+    }
+
+    async function fbJson(method, url, data) {
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      return res.ok;
+    }
+
+    async function touchMetaOnFirebase() {
+      // تحديث meta حتى لا يعتبر "مغلق" على الأجهزة الأخرى
+      const now = serverNow();
+      try {
+        await fbJson("PATCH", META_URL, {
+          esp32_last_seen_ms: now,
+          last_request_ms: now
+        });
+      } catch {}
+    }
+
+    async function writeTicketToFirebase(ticket) {
+      try {
+        await fbJson("PUT", TICKET_URL, Number(ticket));
+      } catch {}
+    }
+
+    function startTestMetaHeartbeatIfNeeded() {
+      if (!state.testMode) return;
+
+      if (!testWriteFirebase.checked) {
+        if (testMetaHeartbeatTimer) {
+          clearInterval(testMetaHeartbeatTimer);
+          testMetaHeartbeatTimer = null;
+        }
+        return;
+      }
+
+      if (testMetaHeartbeatTimer) return;
+
+      testMetaHeartbeatTimer = setInterval(() => {
+        if (!state.testMode) return;
+        if (!testWriteFirebase.checked) return;
+        touchMetaOnFirebase().catch(() => {});
+      }, 60 * 1000);
+
+      touchMetaOnFirebase().catch(() => {});
+    }
+
+    async function applyTestTicket(rawValue) {
+      const n = Math.max(1, parseInt(rawValue, 10) || 1);
+
+      setSystemClosed(false);
+      setOnline(true);
+
+      setTicket(n);
+
+      if (testWriteFirebase.checked) {
+        await writeTicketToFirebase(n);
+        await touchMetaOnFirebase();
+      }
+    }
+
+    function enableTestMode() {
+      state.testMode = true;
+      localStorage.setItem(LS_TEST_KEY, "1");
+
+      // أوقف أي اتصالات Firebase
+      closeFirebaseConnections();
+      stopPolling();
+
+      // اعتبره متصل ومفتوح
+      state.metaLoaded = true;
+      setOnline(true);
+      setSystemClosed(false);
+
+      // رقم افتراضي إن لم يوجد
+      if (!Number.isFinite(Number(state.current_ticket))) {
+        setTicket(1);
+      }
+
+      refreshTestUIVisibility();
+      startTestMetaHeartbeatIfNeeded();
+      updateStatusUI();
+    }
+
+    function exitTestMode() {
+      // أوقف التايمرات
+      if (testAutoTimer) {
+        clearInterval(testAutoTimer);
+        testAutoTimer = null;
+      }
+      if (testMetaHeartbeatTimer) {
+        clearInterval(testMetaHeartbeatTimer);
+        testMetaHeartbeatTimer = null;
+      }
+
+      localStorage.removeItem(LS_TEST_KEY);
+
+      // أعد تحميل الصفحة بدون ?test=1
+      const url = new URL(location.href);
+      url.searchParams.delete("test");
+      location.href = url.toString();
+    }
+
+    function toggleTestAuto() {
+      if (testAutoTimer) {
+        clearInterval(testAutoTimer);
+        testAutoTimer = null;
+        setTestAutoBtnState(false);
+        return;
+      }
+
+      const seconds = Math.max(1, parseInt(testIntervalInput.value, 10) || 5);
+      setTestAutoBtnState(true);
+
+      testAutoTimer = setInterval(() => {
+        const current = Number(state.current_ticket);
+        const next = Number.isFinite(current) ? current + 1 : 1;
+        applyTestTicket(next).catch(() => {});
+      }, seconds * 1000);
+    }
+
+    /***********************
+     * Test UI events
+     ***********************/
+    openTestBtn.addEventListener("click", () => {
+      enableTestMode();
+    });
+
+    testApplyBtn.addEventListener("click", () => {
+      applyTestTicket(testTicketInput.value).catch(() => {});
+    });
+
+    testMinusBtn.addEventListener("click", () => {
+      const current = parseInt(testTicketInput.value, 10);
+      const next = Math.max(1, (Number.isNaN(current) ? 1 : current) - 1);
+      applyTestTicket(next).catch(() => {});
+    });
+
+    testPlusBtn.addEventListener("click", () => {
+      const current = parseInt(testTicketInput.value, 10);
+      const next = (Number.isNaN(current) ? 1 : current) + 1;
+      applyTestTicket(next).catch(() => {});
+    });
+
+    testAutoBtn.addEventListener("click", () => {
+      toggleTestAuto();
+    });
+
+    testWriteFirebase.addEventListener("change", () => {
+      startTestMetaHeartbeatIfNeeded();
+    });
+
+    testNotifyBtn.addEventListener("click", async () => {
+      await registerServiceWorker().catch(() => {});
+      const ok = await ensureNotificationsEnabled().catch(() => false);
+      if (!ok) return;
+
+      // force:true حتى يظهر فوراً أثناء فتح الصفحة
+      await sendNotification(
+        "Notification de test (mode test)",
+        "إشعار تجريبي (وضع الاختبار)",
+        { urgent: false, tag: "test-notif", force: true }
+      ).catch(() => {});
+    });
+
+    exitTestBtn.addEventListener("click", () => {
+      exitTestMode();
+    });
+
+    /***********************
+     * Timers / visibility
+     ***********************/
     setInterval(() => {
+      if (state.testMode) return;
       if (!state.metaLoaded) return;
       evaluateClosedState();
     }, CHECK_MS);
@@ -1516,18 +1892,15 @@
     document.addEventListener(
       "visibilitychange",
       async () => {
-        if (
-          document.visibilityState === "visible"
-        ) {
+        if (state.testMode) return;
+
+        if (document.visibilityState === "visible") {
           await fetchServerOffset();
           await initialFetch();
           connectStream();
         }
 
-        if (
-          state.trackingEnabled &&
-          !state.systemClosed
-        ) {
+        if (state.trackingEnabled && !state.systemClosed) {
           startPolling();
         } else {
           stopPolling();
@@ -1535,6 +1908,9 @@
       }
     );
 
+    /***********************
+     * Start
+     ***********************/
     (async function start() {
       loadSettings();
 
@@ -1543,20 +1919,28 @@
         "جارٍ الاتصال..."
       );
 
-      // تسجيل الـ SW مبكرًا (لا نوقف التحميل إذا فشل)
       registerServiceWorker().catch(() => {});
 
       await fetchServerOffset();
-      await initialFetch();
 
-      connectStream();
+      // إظهار/إخفاء واجهة الاختبار حسب الروابط/الحالة
+      refreshTestUIVisibility();
+
+      if (state.testMode) {
+        enableTestMode();
+        // املأ مدخل الاختبار بالقيمة الحالية
+        testTicketInput.value = String(Number.isFinite(Number(state.current_ticket)) ? state.current_ticket : 1);
+        setTestAutoBtnState(false);
+      } else {
+        await initialFetch();
+        connectStream();
+      }
+
       renderTicketNumber();
       updateStatusUI();
 
       setInputsFrozen(state.systemClosed);
-      updateThresholdConstraints({
-        clamp: true
-      });
+      updateThresholdConstraints({ clamp: true });
     })();
   </script>
 </body>
