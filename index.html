@@ -4,15 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Système de gestion de file d'attente — Poste Cite El Amel 4</title>
+
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <!-- (اختياري) ألوان للمتصفح/الشريط -->
   <meta name="theme-color" content="#2563eb">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
@@ -243,9 +244,7 @@
       transition:filter .15s ease, background-color .2s ease, border-color .2s ease;
     }
 
-    .btn:hover{
-      filter:brightness(.97);
-    }
+    .btn:hover{ filter:brightness(.97); }
 
     .btn .bi .ar{
       color:rgba(255,255,255,0.98);
@@ -259,18 +258,13 @@
       font-size:12.5px;
     }
 
-    .btn.active{
-      background:var(--success);
-    }
+    .btn.active{ background:var(--success); }
 
     .btn:disabled{
       opacity:.65;
       cursor:not-allowed;
     }
-
-    .btn:disabled:hover{
-      filter:none;
-    }
+    .btn:disabled:hover{ filter:none; }
 
     .alert-banner{
       display:none;
@@ -283,9 +277,7 @@
       text-align:center;
     }
 
-    .alert-banner.active{
-      display:block;
-    }
+    .alert-banner.active{ display:block; }
 
     .alert-banner.urgent{
       background-color:var(--danger-bg);
@@ -344,7 +336,6 @@
       box-shadow:0 0 0 4px rgba(245,158,11,0.14);
     }
 
-    /* ====== TEST PANEL (يظهر فقط عند ?test=1) ====== */
     .test-panel{
       margin-top:14px;
       padding:14px;
@@ -353,9 +344,7 @@
       background:linear-gradient(180deg, #f8fafc, #ffffff);
       text-align:initial;
     }
-    .test-panel h3{
-      margin-bottom:10px;
-    }
+    .test-panel h3{ margin-bottom:10px; }
     .test-row{
       display:flex;
       gap:8px;
@@ -364,19 +353,14 @@
       align-items:center;
       margin-top:10px;
     }
-    .test-row input{
-      width:160px;
-      max-width:100%;
-    }
+    .test-row input{ width:160px; max-width:100%; }
     .btn.test-btn{
       max-width:170px;
       margin:0;
       padding:10px 12px;
       background:#111827;
     }
-    .btn.test-btn.secondary{
-      background:#374151;
-    }
+    .btn.test-btn.secondary{ background:#374151; }
     .test-note{
       margin-top:10px;
       color:var(--muted);
@@ -386,15 +370,8 @@
     }
 
     @media (prefers-reduced-motion:reduce){
-      .number,
-      .btn,
-      .input-group input{
-        transition:none;
-      }
-
-      .number.updated{
-        transform:none;
-      }
+      .number,.btn,.input-group input{ transition:none; }
+      .number.updated{ transform:none; }
     }
   </style>
 </head>
@@ -411,12 +388,7 @@
     </h1>
 
     <div class="number-box">
-      <div
-        class="number"
-        id="queueNum"
-        aria-live="polite"
-        aria-atomic="true"
-      >--</div>
+      <div class="number" id="queueNum" aria-live="polite" aria-atomic="true">--</div>
     </div>
 
     <div class="user-section">
@@ -434,15 +406,7 @@
             <span class="fr" lang="fr">Votre numéro</span>
           </span>
         </label>
-
-        <input
-          type="number"
-          inputmode="numeric"
-          pattern="[0-9]*"
-          step="1"
-          id="myTicketInput"
-          min="1"
-        />
+        <input type="number" inputmode="numeric" pattern="[0-9]*" step="1" id="myTicketInput" min="1" />
       </div>
 
       <div class="input-group">
@@ -452,16 +416,7 @@
             <span class="fr" lang="fr">Marge d'alerte (personnes avant vous)</span>
           </span>
         </label>
-
-        <input
-          type="number"
-          inputmode="numeric"
-          pattern="[0-9]*"
-          step="1"
-          id="thresholdInput"
-          value="10"
-          min="0"
-        />
+        <input type="number" inputmode="numeric" pattern="[0-9]*" step="1" id="thresholdInput" value="10" min="0" />
       </div>
 
       <button id="verifyBtn" class="btn" type="button" aria-pressed="false">
@@ -479,7 +434,6 @@
       <div id="statusText" style="width:100%;"></div>
     </div>
 
-    <!-- TEST PANEL: مخفي افتراضيًا ويظهر فقط عند ?test=1 -->
     <div id="testPanel" class="test-panel" hidden>
       <h3>
         <span class="bi center">
@@ -500,16 +454,10 @@
 
       <div class="test-row">
         <button id="testDecBtn" class="btn test-btn secondary" type="button">
-          <span class="bi center">
-            <span class="ar" lang="ar">- 1</span>
-            <span class="fr" lang="fr">- 1</span>
-          </span>
+          <span class="bi center"><span class="ar" lang="ar">- 1</span><span class="fr" lang="fr">- 1</span></span>
         </button>
         <button id="testIncBtn" class="btn test-btn" type="button">
-          <span class="bi center">
-            <span class="ar" lang="ar">+ 1</span>
-            <span class="fr" lang="fr">+ 1</span>
-          </span>
+          <span class="bi center"><span class="ar" lang="ar">+ 1</span><span class="fr" lang="fr">+ 1</span></span>
         </button>
       </div>
 
@@ -539,57 +487,38 @@
   </div>
 
   <script>
-    /***********************
-     * TEST MODE (تشغيل فقط عند ?test=1)
-     ***********************/
     const QS = new URLSearchParams(location.search);
     const TEST_MODE = QS.get("test") === "1";
 
-    /***********************
-     * Firebase REST
-     ***********************/
     const DB_BASE = "https://poste-elamal4-file-default-rtdb.firebaseio.com/";
 
     function makeUrl(path, params = {}) {
       const url = new URL(
-        DB_BASE.replace(/\/$/, "") +
-        "/" +
-        path.replace(/^\//, "") +
-        ".json"
+        DB_BASE.replace(/\/$/, "") + "/" + path.replace(/^\//, "") + ".json"
       );
-
       Object.entries(params).forEach(([key, value]) => {
         url.searchParams.set(key, String(value));
       });
-
       return url.toString();
     }
 
     const STREAM_URL = makeUrl("queue", { print: "silent" });
-    const QUEUE_URL = makeUrl("queue");
+    const QUEUE_URL  = makeUrl("queue");
     const TICKET_URL = makeUrl("queue/current_ticket");
     const OFFSET_URL = makeUrl(".info/serverTimeOffset");
-    const META_URL = makeUrl("queue/meta");
+    const META_URL   = makeUrl("queue/meta");
 
-    /***********************
-     * Policy
-     ***********************/
     const HEARTBEAT_INTERVAL_MIN = 5;
     const HEARTBEAT_MISSED_LIMIT = 2;
-    const HEARTBEAT_CLOSE_MS =
-      HEARTBEAT_INTERVAL_MIN * HEARTBEAT_MISSED_LIMIT * 60 * 1000;
+    const HEARTBEAT_CLOSE_MS = HEARTBEAT_INTERVAL_MIN * HEARTBEAT_MISSED_LIMIT * 60 * 1000;
 
     const REQUEST_INACTIVITY_MIN = 30;
-    const REQUEST_CLOSE_MS =
-      REQUEST_INACTIVITY_MIN * 60 * 1000;
+    const REQUEST_CLOSE_MS = REQUEST_INACTIVITY_MIN * 60 * 1000;
 
     const CHECK_MS = 30 * 1000;
     const POLL_VISIBLE_MS = 8000;
-    const POLL_HIDDEN_MS = 15000;
+    const POLL_HIDDEN_MS  = 15000;
 
-    /***********************
-     * Service Worker register
-     ***********************/
     const SW_URL = "/sw.js";
 
     async function registerServiceWorker() {
@@ -602,34 +531,23 @@
       }
     }
 
-    /***********************
-     * منع تذبذب حالة الاتصال
-     ***********************/
     const OFFLINE_GRACE_MS = 2500;
     let offlineUiTimer = null;
 
     function requestOfflineUI() {
       if (offlineUiTimer) return;
-
       offlineUiTimer = setTimeout(() => {
         offlineUiTimer = null;
-
-        if (!es || es.readyState !== 1) {
-          setOnline(false);
-        }
+        if (!es || es.readyState !== 1) setOnline(false);
       }, OFFLINE_GRACE_MS);
     }
 
     function cancelOfflineUI() {
       if (!offlineUiTimer) return;
-
       clearTimeout(offlineUiTimer);
       offlineUiTimer = null;
     }
 
-    /***********************
-     * Elements
-     ***********************/
     const queueNumEl = document.getElementById("queueNum");
     const statusContainer = document.getElementById("statusContainer");
     const statusText = document.getElementById("statusText");
@@ -640,7 +558,6 @@
     const verifyBtnAr = document.getElementById("verifyBtnAr");
     const verifyBtnFr = document.getElementById("verifyBtnFr");
 
-    // Test panel elements
     const testPanel = document.getElementById("testPanel");
     const testTicketInput = document.getElementById("testTicketInput");
     const testApplyBtn = document.getElementById("testApplyBtn");
@@ -649,29 +566,19 @@
     const testAutoToggle = document.getElementById("testAutoToggle");
     const testAutoPeriod = document.getElementById("testAutoPeriod");
 
-    /***********************
-     * State
-     ***********************/
     const state = {
       current_ticket: null,
       lastAlertedDiff: null,
       trackingEnabled: false,
       userEditing: false,
-
       isOnline: false,
       systemClosed: false,
-
       serverOffset: 0,
-
       esp32_last_seen_ms: null,
       last_request_ms: null,
-
       metaLoaded: false
     };
 
-    /***********************
-     * TEST state (local simulation)
-     ***********************/
     const testSim = {
       ticket: 1,
       heartbeatTimer: null,
@@ -686,9 +593,7 @@
     }
 
     function testSaveTicket() {
-      try {
-        localStorage.setItem(testSim.LS_KEY_TICKET, String(testSim.ticket));
-      } catch {}
+      try { localStorage.setItem(testSim.LS_KEY_TICKET, String(testSim.ticket)); } catch {}
     }
 
     function testSetTicket(n) {
@@ -709,10 +614,7 @@
 
     function startTestHeartbeat() {
       stopTestHeartbeat();
-      // تحديث meta كل 20 ثانية حتى لا يعتبر النظام "مغلق"
-      testSim.heartbeatTimer = setInterval(() => {
-        testTouchMeta();
-      }, 20000);
+      testSim.heartbeatTimer = setInterval(() => testTouchMeta(), 20000);
       testTouchMeta();
     }
 
@@ -726,9 +628,7 @@
     function startTestAutoIncrement() {
       stopTestAutoIncrement();
       const sec = Math.max(1, Math.floor(Number(testAutoPeriod?.value) || 5));
-      testSim.autoTimer = setInterval(() => {
-        testSetTicket(testSim.ticket + 1);
-      }, sec * 1000);
+      testSim.autoTimer = setInterval(() => testSetTicket(testSim.ticket + 1), sec * 1000);
     }
 
     function stopTestAutoIncrement() {
@@ -738,30 +638,18 @@
       }
     }
 
-    /***********************
-     * حفظ الإعدادات محليًا
-     ***********************/
     const LS_KEY = "queue_tracker_settings_v1";
 
     function loadSettings() {
       try {
         const raw = localStorage.getItem(LS_KEY);
         if (!raw) return;
-
         const settings = JSON.parse(raw);
         if (!settings || typeof settings !== "object") return;
-
-        if (
-          typeof settings.myTicket === "string" ||
-          typeof settings.myTicket === "number"
-        ) {
+        if (typeof settings.myTicket === "string" || typeof settings.myTicket === "number") {
           myTicketInput.value = String(settings.myTicket);
         }
-
-        if (
-          typeof settings.threshold === "string" ||
-          typeof settings.threshold === "number"
-        ) {
+        if (typeof settings.threshold === "string" || typeof settings.threshold === "number") {
           thresholdInput.value = String(settings.threshold);
         }
       } catch {}
@@ -771,17 +659,11 @@
       try {
         localStorage.setItem(
           LS_KEY,
-          JSON.stringify({
-            myTicket: myTicketInput.value,
-            threshold: thresholdInput.value
-          })
+          JSON.stringify({ myTicket: myTicketInput.value, threshold: thresholdInput.value })
         );
       } catch {}
     }
 
-    /***********************
-     * UI helpers
-     ***********************/
     function escapeHtml(value) {
       return String(value)
         .replaceAll("&", "&amp;")
@@ -804,11 +686,7 @@
       statusText.innerHTML = biHTML(frText, arText);
     }
 
-    function setBanner(
-      frText,
-      arText,
-      { active = true, urgent = false } = {}
-    ) {
+    function setBanner(frText, arText, { active = true, urgent = false } = {}) {
       alertBanner.innerHTML = biHTML(frText, arText);
       alertBanner.classList.toggle("active", !!active);
       alertBanner.classList.toggle("urgent", !!urgent);
@@ -820,58 +698,36 @@
     }
 
     function setVerifyBtnActive(isActive) {
-  verifyBtn.classList.toggle("active", !!isActive);
-  verifyBtn.setAttribute("aria-pressed", isActive ? "true" : "false");
-
-  // خلي النص ثابت دائمًا (بدون إيقاف)
-  verifyBtnAr.textContent = "متابعة";
-  verifyBtnFr.textContent = "Suivi";
+      verifyBtn.classList.toggle("active", !!isActive);
+      verifyBtn.setAttribute("aria-pressed", isActive ? "true" : "false");
+      // نص ثابت دائمًا
+      verifyBtnAr.textContent = "متابعة";
+      verifyBtnFr.textContent = "Suivi";
     }
 
     setVerifyBtnActive(false);
 
     function triggerUpdateAnimation() {
       queueNumEl.classList.add("updated");
-
-      setTimeout(() => {
-        queueNumEl.classList.remove("updated");
-      }, 350);
+      setTimeout(() => queueNumEl.classList.remove("updated"), 350);
     }
 
     function setInputsFrozen(frozen) {
       const shouldFreeze = !!frozen;
-
       if (shouldFreeze) {
         try { myTicketInput.blur(); } catch {}
         try { thresholdInput.blur(); } catch {}
       }
-
       myTicketInput.disabled = shouldFreeze;
       thresholdInput.disabled = shouldFreeze;
     }
 
-    /***********************
-     * Server time
-     ***********************/
     async function fetchServerOffset() {
       try {
-        const response = await fetch(
-          OFFSET_URL,
-          { cache: "no-store" }
-        );
-
-        if (!response.ok) {
-          throw new Error("offset fetch failed");
-        }
-
+        const response = await fetch(OFFSET_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("offset fetch failed");
         const offset = await response.json();
-
-        if (
-          typeof offset === "number" &&
-          Number.isFinite(offset)
-        ) {
-          state.serverOffset = offset;
-        }
+        if (typeof offset === "number" && Number.isFinite(offset)) state.serverOffset = offset;
       } catch {}
     }
 
@@ -879,21 +735,13 @@
       return Date.now() + (state.serverOffset || 0);
     }
 
-    /***********************
-     * حالة إغلاق النظام
-     ***********************/
     function computeClosedReasons() {
       const now = serverNow();
       const lastSeen = Number(state.esp32_last_seen_ms);
       const lastRequest = Number(state.last_request_ms);
 
-      const hbStale =
-        !Number.isFinite(lastSeen) ||
-        now - lastSeen >= HEARTBEAT_CLOSE_MS;
-
-      const reqStale =
-        !Number.isFinite(lastRequest) ||
-        now - lastRequest >= REQUEST_CLOSE_MS;
+      const hbStale = !Number.isFinite(lastSeen) || now - lastSeen >= HEARTBEAT_CLOSE_MS;
+      const reqStale = !Number.isFinite(lastRequest) || now - lastRequest >= REQUEST_CLOSE_MS;
 
       return { hbStale, reqStale };
     }
@@ -901,21 +749,14 @@
     function updateStatusUI() {
       statusContainer.classList.remove("online", "closed");
 
-      // في وضع الاختبار: نعرض حالة خاصة دائمًا
       if (TEST_MODE) {
         statusContainer.classList.add("online");
-        setStatus(
-          "Mode test activé (test=1)",
-          "تم تفعيل وضع الاختبار (test=1)"
-        );
+        setStatus("Mode test activé (test=1)", "تم تفعيل وضع الاختبار (test=1)");
         return;
       }
 
       if (!state.isOnline) {
-        setStatus(
-          "Hors ligne - Reconnexion...",
-          "غير متصل - جارٍ إعادة الاتصال..."
-        );
+        setStatus("Hors ligne - Reconnexion...", "غير متصل - جارٍ إعادة الاتصال...");
         return;
       }
 
@@ -940,21 +781,12 @@
         queueNumEl.classList.add("closed");
         return;
       }
-
       queueNumEl.classList.remove("closed");
 
-      const value =
-        state.current_ticket === null
-          ? NaN
-          : Number(state.current_ticket);
-
-      queueNumEl.textContent =
-        Number.isFinite(value) ? String(value) : "--";
+      const value = state.current_ticket === null ? NaN : Number(state.current_ticket);
+      queueNumEl.textContent = Number.isFinite(value) ? String(value) : "--";
     }
 
-    /***********************
-     * Polling والتحكم بالتتبع
-     ***********************/
     let pollTimer = null;
 
     function stopPolling() {
@@ -967,15 +799,21 @@
     function stopTrackingHard() {
       state.trackingEnabled = false;
       state.lastAlertedDiff = null;
-
       clearBanner();
+      stopPolling();
+      setVerifyBtnActive(false);
+    }
+
+    // ====== (ميزة جديدة) إيقاف التتبع مع الإبقاء على رسالة "فات دورك" ======
+    function stopTrackingKeepBanner() {
+      state.trackingEnabled = false;
+      state.lastAlertedDiff = null;
       stopPolling();
       setVerifyBtnActive(false);
     }
 
     function setSystemClosed(isClosed) {
       const next = !!isClosed;
-
       if (state.systemClosed === next) return;
 
       state.systemClosed = next;
@@ -995,37 +833,22 @@
     }
 
     function evaluateClosedState() {
-      // في وضع الاختبار لا نغلق النظام أبدًا
       if (TEST_MODE) {
         setSystemClosed(false);
         return;
       }
-
       if (!state.metaLoaded) return;
-
       const { hbStale, reqStale } = computeClosedReasons();
       setSystemClosed(hbStale || reqStale);
     }
 
-    /***********************
-     * ضبط هامش التنبيه
-     ***********************/
     function getNumbersForDiff() {
       const myTicket = parseInt(myTicketInput.value, 10);
-
-      if (state.current_ticket === null) {
-        return { ok: false };
-      }
+      if (state.current_ticket === null) return { ok: false };
 
       const currentTicket = Number(state.current_ticket);
-
-      if (!Number.isFinite(currentTicket)) {
-        return { ok: false };
-      }
-
-      if (Number.isNaN(myTicket) || myTicket < 1) {
-        return { ok: false };
-      }
+      if (!Number.isFinite(currentTicket)) return { ok: false };
+      if (Number.isNaN(myTicket) || myTicket < 1) return { ok: false };
 
       return { ok: true, myTicket, currentTicket };
     }
@@ -1040,44 +863,25 @@
 
       const diff = info.myTicket - info.currentTicket;
       const maxAllowed = Math.max(0, diff);
-
       thresholdInput.max = String(maxAllowed);
 
       if (!clamp) return;
 
       const threshold = parseInt(thresholdInput.value, 10);
-
       if (Number.isNaN(threshold)) return;
 
-      const clampedValue = Math.min(
-        Math.max(0, threshold),
-        maxAllowed
-      );
-
-      if (clampedValue !== threshold) {
-        thresholdInput.value = String(clampedValue);
-      }
+      const clampedValue = Math.min(Math.max(0, threshold), maxAllowed);
+      if (clampedValue !== threshold) thresholdInput.value = String(clampedValue);
     }
 
-    /***********************
-     * Notifications (Permission + SW showNotification)
-     ***********************/
     async function ensureNotificationsEnabled() {
       if (!("Notification" in window)) return false;
       if (!window.isSecureContext) return false;
 
-      if (Notification.permission === "granted") {
-        return true;
-      }
+      if (Notification.permission === "granted") return true;
+      if (Notification.permission === "denied") return false;
 
-      if (Notification.permission === "denied") {
-        return false;
-      }
-
-      const permission = await Notification
-        .requestPermission()
-        .catch(() => "denied");
-
+      const permission = await Notification.requestPermission().catch(() => "denied");
       return permission === "granted";
     }
 
@@ -1087,14 +891,13 @@
         if (!window.isSecureContext) return false;
         if (Notification.permission !== "granted") return false;
 
-
         const title = urgent ? "تنبيه / Alerte" : "إشعار / Notification";
         const body = `${arText}\n${frText}`;
 
         if ("serviceWorker" in navigator) {
           let reg = await navigator.serviceWorker.getRegistration();
           if (!reg) {
-            try { reg = await navigator.serviceWorker.register(SW_URL); } catch {}
+            try { reg = await navigator.serviceWorker.register(SW_URL, { scope: "/" }); } catch {}
           }
           if (reg && reg.showNotification) {
             await reg.showNotification(title, {
@@ -1116,27 +919,15 @@
       }
     }
 
-    /***********************
-     * Audio
-     ***********************/
     let audioCtx = null;
 
     function ensureAudio() {
       if (!audioCtx) {
-        const AudioContextClass =
-          window.AudioContext || window.webkitAudioContext;
-
-        if (!AudioContextClass) {
-          return Promise.resolve();
-        }
-
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return Promise.resolve();
         audioCtx = new AudioContextClass();
       }
-
-      if (audioCtx.state === "suspended") {
-        return audioCtx.resume();
-      }
-
+      if (audioCtx.state === "suspended") return audioCtx.resume();
       return Promise.resolve();
     }
 
@@ -1149,16 +940,10 @@
           const gain = audioCtx.createGain();
 
           oscillator.type = "triangle";
-          oscillator.frequency.setValueAtTime(
-            frequency,
-            time
-          );
+          oscillator.frequency.setValueAtTime(frequency, time);
 
           gain.gain.setValueAtTime(0.25, time);
-          gain.gain.exponentialRampToValueAtTime(
-            0.00001,
-            time + duration
-          );
+          gain.gain.exponentialRampToValueAtTime(0.00001, time + duration);
 
           oscillator.connect(gain);
           gain.connect(audioCtx.destination);
@@ -1168,50 +953,25 @@
         };
 
         const now = audioCtx.currentTime;
-
         playTone(987.77, now, 0.25);
         playTone(1318.51, now + 0.3, 0.4);
       }).catch(() => {});
     }
 
-    ["pointerdown", "touchstart", "mousedown", "keydown"]
-      .forEach((eventName) => {
-        window.addEventListener(
-          eventName,
-          () => ensureAudio().catch(() => {}),
-          { once: true, passive: true }
-        );
-      });
+    ["pointerdown", "touchstart", "mousedown", "keydown"].forEach((eventName) => {
+      window.addEventListener(eventName, () => ensureAudio().catch(() => {}), { once: true, passive: true });
+    });
 
-    /***********************
-     * تنبيهات دور المستخدم
-     ***********************/
     function checkUserAlert(currentTicket) {
       if (state.systemClosed) return;
 
-      if (!state.userEditing) {
-        updateThresholdConstraints({ clamp: true });
-      }
+      if (!state.userEditing) updateThresholdConstraints({ clamp: true });
 
-      const myTicket = parseInt(
-        myTicketInput.value,
-        10
-      );
+      const myTicket = parseInt(myTicketInput.value, 10);
+      const thresholdParsed = parseInt(thresholdInput.value, 10);
+      const threshold = Number.isNaN(thresholdParsed) ? 10 : thresholdParsed;
 
-      const thresholdParsed = parseInt(
-        thresholdInput.value,
-        10
-      );
-
-      const threshold = Number.isNaN(thresholdParsed)
-        ? 10
-        : thresholdParsed;
-
-      if (
-        Number.isNaN(myTicket) ||
-        currentTicket === null ||
-        Number.isNaN(Number(currentTicket))
-      ) {
+      if (Number.isNaN(myTicket) || currentTicket === null || Number.isNaN(Number(currentTicket))) {
         clearBanner();
         state.lastAlertedDiff = null;
         return;
@@ -1229,6 +989,7 @@
           sendNotification(fr, ar, { urgent: true, tag: "queue-urgent" }).catch(() => {});
           state.lastAlertedDiff = 0;
         }
+
       } else if (diff > 0 && diff <= threshold) {
         const fr = `Attention ! Il reste ${diff} personne(s) avant votre tour.`;
         const ar = `تنبيه! مازال ${diff} شخص/أشخاص قبل دورك.`;
@@ -1239,6 +1000,7 @@
           sendNotification(fr, ar, { urgent: false, tag: "queue-soon" }).catch(() => {});
           state.lastAlertedDiff = diff;
         }
+
       } else if (diff < 0) {
         const fr = "Votre tour est déjà passé.";
         const ar = "لقد فات دورك.";
@@ -1249,36 +1011,27 @@
         }
 
         state.lastAlertedDiff = diff;
+
+        // ====== (ميزة جديدة) عند فوات الدور: أوقف التتبع وارجع الزر كما كان ======
+        stopTrackingKeepBanner();
+
       } else {
         clearBanner();
         state.lastAlertedDiff = diff;
       }
     }
 
-    /***********************
-     * Polling احتياطي أثناء التتبع
-     ***********************/
     async function pollCurrentTicketOnce() {
-      if (state.systemClosed || !state.trackingEnabled) {
-        return;
-      }
+      if (state.systemClosed || !state.trackingEnabled) return;
 
-      // في وضع الاختبار: نقرأ من القيمة المحلية بدل Firebase
       if (TEST_MODE) {
         setTicket(testSim.ticket);
         return;
       }
 
       try {
-        const response = await fetch(
-          TICKET_URL,
-          { cache: "no-store" }
-        );
-
-        if (!response.ok) {
-          throw new Error("poll failed");
-        }
-
+        const response = await fetch(TICKET_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("poll failed");
         const ticket = await response.json();
         setTicket(ticket);
       } catch {}
@@ -1286,52 +1039,22 @@
 
     function startPolling() {
       stopPolling();
-
-      const period =
-        document.visibilityState === "visible"
-          ? POLL_VISIBLE_MS
-          : POLL_HIDDEN_MS;
-
-      pollTimer = setInterval(
-        pollCurrentTicketOnce,
-        period
-      );
-
+      const period = document.visibilityState === "visible" ? POLL_VISIBLE_MS : POLL_HIDDEN_MS;
+      pollTimer = setInterval(pollCurrentTicketOnce, period);
       pollCurrentTicketOnce();
     }
 
-    /***********************
-     * زر واحد: بدء / إيقاف التتبع
-     ***********************/
     function inputsAreValidOrShowMessage() {
-      const myTicket = parseInt(
-        myTicketInput.value,
-        10
-      );
-
-      const threshold = parseInt(
-        thresholdInput.value,
-        10
-      );
+      const myTicket = parseInt(myTicketInput.value, 10);
+      const threshold = parseInt(thresholdInput.value, 10);
 
       if (Number.isNaN(myTicket) || myTicket < 1) {
-        setBanner(
-          "Veuillez saisir un numéro de ticket valide.",
-          "يرجى إدخال رقم صف صحيح.",
-          { active: true, urgent: true }
-        );
+        setBanner("Veuillez saisir un numéro de ticket valide.", "يرجى إدخال رقم صف صحيح.", { active: true, urgent: true });
         return false;
       }
 
-      if (
-        Number.isNaN(threshold) ||
-        threshold < 0
-      ) {
-        setBanner(
-          "Veuillez saisir une marge d'alerte valide (>= 0).",
-          "يرجى إدخال هامش تنبيه صحيح (>= 0).",
-          { active: true, urgent: true }
-        );
+      if (Number.isNaN(threshold) || threshold < 0) {
+        setBanner("Veuillez saisir une marge d'alerte valide (>= 0).", "يرجى إدخال هامش تنبيه صحيح (>= 0).", { active: true, urgent: true });
         return false;
       }
 
@@ -1340,152 +1063,83 @@
     }
 
     function startTrackingOnly() {
-  // إذا بدأت المتابعة مسبقًا لا تفعل شيئًا (بدون إيقاف)
-    if (state.trackingEnabled) return;
-  
-    if (state.systemClosed) return;
-    if (!inputsAreValidOrShowMessage()) return;
-  
-    saveSettings();
-  
-    state.trackingEnabled = true;
-    state.lastAlertedDiff = null;
-  
-    setVerifyBtnActive(true);
-  
-    registerServiceWorker().catch(() => {});
-    ensureNotificationsEnabled().catch(() => {});
-  
-    startPolling();
-    checkUserAlert(state.current_ticket);
+      if (state.trackingEnabled) return;
+      if (state.systemClosed) return;
+      if (!inputsAreValidOrShowMessage()) return;
+
+      saveSettings();
+
+      state.trackingEnabled = true;
+      state.lastAlertedDiff = null;
+
+      setVerifyBtnActive(true);
+
+      registerServiceWorker().catch(() => {});
+      ensureNotificationsEnabled().catch(() => {});
+
+      startPolling();
+      checkUserAlert(state.current_ticket);
     }
 
     verifyBtn.addEventListener("click", startTrackingOnly);
 
-    myTicketInput.addEventListener(
-      "input",
-      () => {
-        stopTrackingHard();
-      }
-    );
+    myTicketInput.addEventListener("input", () => { stopTrackingHard(); });
+    thresholdInput.addEventListener("input", () => {
+      stopTrackingHard();
+      updateThresholdConstraints({ clamp: !state.userEditing });
+    });
 
-    thresholdInput.addEventListener(
-      "input",
-      () => {
-        stopTrackingHard();
+    myTicketInput.addEventListener("focus", () => { state.userEditing = true; });
+    myTicketInput.addEventListener("blur", () => {
+      state.userEditing = false;
+      updateThresholdConstraints({ clamp: true });
+      saveSettings();
+    });
 
-        updateThresholdConstraints({
-          clamp: !state.userEditing
-        });
-      }
-    );
+    thresholdInput.addEventListener("focus", () => { state.userEditing = true; });
+    thresholdInput.addEventListener("blur", () => {
+      state.userEditing = false;
+      updateThresholdConstraints({ clamp: true });
+      saveSettings();
+    });
 
-    myTicketInput.addEventListener(
-      "focus",
-      () => {
-        state.userEditing = true;
-      }
-    );
-
-    myTicketInput.addEventListener(
-      "blur",
-      () => {
-        state.userEditing = false;
-        updateThresholdConstraints({ clamp: true });
-        saveSettings();
-      }
-    );
-
-    thresholdInput.addEventListener(
-      "focus",
-      () => {
-        state.userEditing = true;
-      }
-    );
-
-    thresholdInput.addEventListener(
-      "blur",
-      () => {
-        state.userEditing = false;
-        updateThresholdConstraints({ clamp: true });
-        saveSettings();
-      }
-    );
-
-    /***********************
-     * عرض رقم الصف
-     ***********************/
     function setTicket(value) {
-      if (
-        value === null ||
-        typeof value === "undefined"
-      ) {
-        return;
-      }
+      if (value === null || typeof value === "undefined") return;
 
       const oldShown = queueNumEl.textContent;
 
       state.current_ticket = Number(value);
       renderTicketNumber();
 
-      if (
-        state.trackingEnabled &&
-        !state.userEditing &&
-        !state.systemClosed
-      ) {
+      if (state.trackingEnabled && !state.userEditing && !state.systemClosed) {
         checkUserAlert(state.current_ticket);
       }
 
-      if (
-        !state.systemClosed &&
-        oldShown !== "--" &&
-        oldShown !== String(state.current_ticket)
-      ) {
+      if (!state.systemClosed && oldShown !== "--" && oldShown !== String(state.current_ticket)) {
         triggerUpdateAnimation();
       }
     }
 
-    /***********************
-     * جلب بيانات حالة النظام
-     ***********************/
     async function fetchMetaOnce() {
       try {
-        const response = await fetch(
-          META_URL,
-          { cache: "no-store" }
-        );
-
+        const response = await fetch(META_URL, { cache: "no-store" });
         if (response.ok) {
           const meta = await response.json();
-
           if (meta && typeof meta === "object") {
-            if ("esp32_last_seen_ms" in meta) {
-              state.esp32_last_seen_ms =
-                meta.esp32_last_seen_ms;
-            }
-
-            if ("last_request_ms" in meta) {
-              state.last_request_ms =
-                meta.last_request_ms;
-            }
-
+            if ("esp32_last_seen_ms" in meta) state.esp32_last_seen_ms = meta.esp32_last_seen_ms;
+            if ("last_request_ms" in meta) state.last_request_ms = meta.last_request_ms;
             state.metaLoaded = true;
           }
         }
       } catch {}
-
       evaluateClosedState();
     }
 
-    /***********************
-     * Firebase SSE
-     ***********************/
     let es = null;
     let reconnectTimer = null;
 
     function scheduleReconnect() {
       if (reconnectTimer) return;
-
       reconnectTimer = setTimeout(() => {
         reconnectTimer = null;
         connectStream();
@@ -1493,83 +1147,44 @@
     }
 
     function applyStreamPayload(payload) {
-      if (
-        !payload ||
-        typeof payload !== "object"
-      ) {
-        return;
-      }
+      if (!payload || typeof payload !== "object") return;
 
       const { path, data } = payload;
 
       if (path === "/") {
         if (data && typeof data === "object") {
-          if ("current_ticket" in data) {
-            setTicket(data.current_ticket);
-          }
+          if ("current_ticket" in data) setTicket(data.current_ticket);
 
-          if (
-            data.meta &&
-            typeof data.meta === "object"
-          ) {
-            if (
-              "esp32_last_seen_ms" in data.meta
-            ) {
-              state.esp32_last_seen_ms =
-                data.meta.esp32_last_seen_ms;
-            }
-
-            if (
-              "last_request_ms" in data.meta
-            ) {
-              state.last_request_ms =
-                data.meta.last_request_ms;
-            }
-
+          if (data.meta && typeof data.meta === "object") {
+            if ("esp32_last_seen_ms" in data.meta) state.esp32_last_seen_ms = data.meta.esp32_last_seen_ms;
+            if ("last_request_ms" in data.meta) state.last_request_ms = data.meta.last_request_ms;
             state.metaLoaded = true;
             evaluateClosedState();
           }
         }
-
         return;
       }
 
-      if (path === "/current_ticket") {
-        setTicket(data);
-        return;
-      }
+      if (path === "/current_ticket") { setTicket(data); return; }
 
       if (path === "/meta") {
         if (data && typeof data === "object") {
-          if ("esp32_last_seen_ms" in data) {
-            state.esp32_last_seen_ms =
-              data.esp32_last_seen_ms;
-          }
-
-          if ("last_request_ms" in data) {
-            state.last_request_ms =
-              data.last_request_ms;
-          }
-
+          if ("esp32_last_seen_ms" in data) state.esp32_last_seen_ms = data.esp32_last_seen_ms;
+          if ("last_request_ms" in data) state.last_request_ms = data.last_request_ms;
           state.metaLoaded = true;
           evaluateClosedState();
         }
-
         return;
       }
 
-      if (
-        path === "/meta/esp32_last_seen_ms"
-      ) {
+      if (path === "/meta/esp32_last_seen_ms") {
         state.esp32_last_seen_ms = data;
         state.metaLoaded = true;
         evaluateClosedState();
         return;
       }
 
-      if (
-        path === "/meta/last_request_ms"
-      ) {
+      if (path === "/meta/last_request_ms") {
         state.last_request_ms = data;
         state.metaLoaded = true;
         evaluateClosedState();
@@ -1577,23 +1192,14 @@
     }
 
     function connectStream() {
-      // في وضع الاختبار: لا SSE ولا Firebase
       if (TEST_MODE) return;
 
       if (es) {
-        try {
-          es.close();
-        } catch {}
-
+        try { es.close(); } catch {}
         es = null;
       }
 
-      if (!state.isOnline) {
-        setStatus(
-          "Connexion au système...",
-          "جارٍ الاتصال بالنظام..."
-        );
-      }
+      if (!state.isOnline) setStatus("Connexion au système...", "جارٍ الاتصال بالنظام...");
 
       try {
         es = new EventSource(STREAM_URL);
@@ -1603,34 +1209,16 @@
           setOnline(true);
         };
 
-        es.addEventListener(
-          "put",
-          (event) => {
-            try {
-              applyStreamPayload(
-                JSON.parse(event.data)
-              );
-            } catch {}
-          }
-        );
+        es.addEventListener("put", (event) => {
+          try { applyStreamPayload(JSON.parse(event.data)); } catch {}
+        });
 
-        es.addEventListener(
-          "patch",
-          (event) => {
-            try {
-              applyStreamPayload(
-                JSON.parse(event.data)
-              );
-            } catch {}
-          }
-        );
+        es.addEventListener("patch", (event) => {
+          try { applyStreamPayload(JSON.parse(event.data)); } catch {}
+        });
 
         es.onmessage = (event) => {
-          try {
-            applyStreamPayload(
-              JSON.parse(event.data)
-            );
-          } catch {}
+          try { applyStreamPayload(JSON.parse(event.data)); } catch {}
         };
 
         es.onerror = () => {
@@ -1643,149 +1231,75 @@
       }
     }
 
-    /***********************
-     * Initial fetch
-     ***********************/
     async function initialFetch() {
-      // في وضع الاختبار: لا نجلب شيئًا من Firebase
       if (TEST_MODE) return;
 
       try {
-        const response = await fetch(
-          QUEUE_URL,
-          { cache: "no-store" }
-        );
-
+        const response = await fetch(QUEUE_URL, { cache: "no-store" });
         if (response.ok) {
           const data = await response.json();
-
-          if (
-            data &&
-            typeof data === "object"
-          ) {
-            if ("current_ticket" in data) {
-              setTicket(data.current_ticket);
-            }
-
-            if (
-              data.meta &&
-              typeof data.meta === "object"
-            ) {
-              if (
-                "esp32_last_seen_ms" in data.meta
-              ) {
-                state.esp32_last_seen_ms =
-                  data.meta.esp32_last_seen_ms;
-              }
-
-              if (
-                "last_request_ms" in data.meta
-              ) {
-                state.last_request_ms =
-                  data.meta.last_request_ms;
-              }
-
+          if (data && typeof data === "object") {
+            if ("current_ticket" in data) setTicket(data.current_ticket);
+            if (data.meta && typeof data.meta === "object") {
+              if ("esp32_last_seen_ms" in data.meta) state.esp32_last_seen_ms = data.meta.esp32_last_seen_ms;
+              if ("last_request_ms" in data.meta) state.last_request_ms = data.meta.last_request_ms;
               state.metaLoaded = true;
             }
           }
         }
       } catch {}
 
-      if (!state.metaLoaded) {
-        await fetchMetaOnce();
-      } else {
-        evaluateClosedState();
-      }
+      if (!state.metaLoaded) await fetchMetaOnce();
+      else evaluateClosedState();
     }
 
     setInterval(() => {
-      if (TEST_MODE) {
-        // نبقيه مفتوحًا دائمًا
-        setSystemClosed(false);
-        return;
-      }
+      if (TEST_MODE) { setSystemClosed(false); return; }
       if (!state.metaLoaded) return;
       evaluateClosedState();
     }, CHECK_MS);
 
-    document.addEventListener(
-      "visibilitychange",
-      async () => {
-        if (TEST_MODE) {
-          if (state.trackingEnabled && !state.systemClosed) {
-            startPolling();
-          } else {
-            stopPolling();
-          }
-          return;
-        }
-
-        if (
-          document.visibilityState === "visible"
-        ) {
-          await fetchServerOffset();
-          await initialFetch();
-          connectStream();
-        }
-
-        if (
-          state.trackingEnabled &&
-          !state.systemClosed
-        ) {
-          startPolling();
-        } else {
-          stopPolling();
-        }
+    document.addEventListener("visibilitychange", async () => {
+      if (TEST_MODE) {
+        if (state.trackingEnabled && !state.systemClosed) startPolling();
+        else stopPolling();
+        return;
       }
-    );
 
-    /***********************
-     * Init Test Mode UI
-     ***********************/
+      if (document.visibilityState === "visible") {
+        await fetchServerOffset();
+        await initialFetch();
+        connectStream();
+      }
+
+      if (state.trackingEnabled && !state.systemClosed) startPolling();
+      else stopPolling();
+    });
+
     function initTestMode() {
       if (testPanel) testPanel.hidden = false;
 
-      // اعتبره "متصل" لكن بوضع اختبار
       setOnline(true);
       state.metaLoaded = true;
       state.serverOffset = 0;
 
-      // ابدأ heartbeat محلي
       startTestHeartbeat();
-
-      // حمّل/ضع رقم تجريبي
       testSetTicket(testLoadTicket());
 
-      // اربط أحداث لوحة الاختبار
-      testApplyBtn?.addEventListener("click", () => {
-        testSetTicket(testTicketInput.value);
-      });
-
-      testDecBtn?.addEventListener("click", () => {
-        testSetTicket(testSim.ticket - 1);
-      });
-
-      testIncBtn?.addEventListener("click", () => {
-        testSetTicket(testSim.ticket + 1);
-      });
-
-      testTicketInput?.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") testSetTicket(testTicketInput.value);
-      });
+      testApplyBtn?.addEventListener("click", () => testSetTicket(testTicketInput.value));
+      testDecBtn?.addEventListener("click", () => testSetTicket(testSim.ticket - 1));
+      testIncBtn?.addEventListener("click", () => testSetTicket(testSim.ticket + 1));
+      testTicketInput?.addEventListener("keydown", (e) => { if (e.key === "Enter") testSetTicket(testTicketInput.value); });
 
       testAutoToggle?.addEventListener("change", () => {
-        if (testAutoToggle.checked) {
-          startTestAutoIncrement();
-        } else {
-          stopTestAutoIncrement();
-        }
+        if (testAutoToggle.checked) startTestAutoIncrement();
+        else stopTestAutoIncrement();
       });
 
       testAutoPeriod?.addEventListener("input", () => {
         if (testAutoToggle?.checked) startTestAutoIncrement();
       });
 
-      // تأكد أن النظام مفتوح
       setSystemClosed(false);
       renderTicketNumber();
       updateStatusUI();
@@ -1793,17 +1307,9 @@
       updateThresholdConstraints({ clamp: true });
     }
 
-    /***********************
-     * Start
-     ***********************/
     (async function start() {
       loadSettings();
-
-      setStatus(
-        "Connexion en cours...",
-        "جارٍ الاتصال..."
-      );
-
+      setStatus("Connexion en cours...", "جارٍ الاتصال...");
       registerServiceWorker().catch(() => {});
 
       if (TEST_MODE) {
@@ -1819,9 +1325,7 @@
       updateStatusUI();
 
       setInputsFrozen(state.systemClosed);
-      updateThresholdConstraints({
-        clamp: true
-      });
+      updateThresholdConstraints({ clamp: true });
     })();
   </script>
 </body>
