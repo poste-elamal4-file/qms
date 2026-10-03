@@ -581,11 +581,6 @@
     const POLL_HIDDEN_MS = 15000;
 
     /***********************
-     * Notifications policy
-     ***********************/
-    const NOTIFY_WHEN_VISIBLE = false;
-
-    /***********************
      * Service Worker register
      ***********************/
     const SW_URL = "sw.js";
@@ -1092,9 +1087,6 @@
         if (!window.isSecureContext) return false;
         if (Notification.permission !== "granted") return false;
 
-        if (!NOTIFY_WHEN_VISIBLE && document.visibilityState === "visible") {
-          return false;
-        }
 
         const title = urgent ? "تنبيه / Alerte" : "إشعار / Notification";
         const body = `${arText}\n${frText}`;
