@@ -723,16 +723,16 @@
       return permission === "granted";
     }
 
-    function sendNotification(frText, arText, { urgent = false, tag = "queue-alert" } = {}) {
+     function sendNotification(frText, arText, { urgent = false, tag = "queue-alert" } = {}) {
       try {
         if (!("Notification" in window)) return false;
         if (Notification.permission !== "granted") return false;
-
+    
         if (!NOTIFY_WHEN_VISIBLE && document.visibilityState === "visible") return false;
-
+    
         const title = urgent ? "تنبيه / Alerte" : "إشعار / Notification";
         const body = `${arText}\n${frText}`;
-
+    
         new Notification(title, {
           body,
           tag,
@@ -1259,12 +1259,15 @@
 
       setInputsFrozen(state.systemClosed);
       updateThresholdConstraints({ clamp: true });
-
+      if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+      }  
       // تحذير مهم لو الصفحة ليست https/localhost
       if (!window.isSecureContext) {
         console.warn("Notifications need HTTPS or localhost. (window.isSecureContext = false)");
       }
     })();
+    
   </script>
 </body>
 </html>
