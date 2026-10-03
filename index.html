@@ -230,21 +230,55 @@
       box-shadow:none !important;
     }
 
+    /* =======================
+       زر + تأثير جديد عند Active
+       (بدون بهتان/طبقة بيضاء)
+       ======================= */
     .btn{
       width:100%;
       max-width:280px;
       margin:8px auto 0;
       display:block;
+
       border:1px solid rgba(0,0,0,0.06);
       border-radius:12px;
       background:var(--primary);
       color:#fff;
       padding:12px 14px;
       cursor:pointer;
-      transition:filter .15s ease, background-color .2s ease, border-color .2s ease;
+
+      position:relative;
+      overflow:hidden;
+
+      transform:translateY(0);
+      box-shadow:0 10px 18px rgba(37,99,235,0.18);
+      transition:
+        transform .12s ease,
+        box-shadow .2s ease,
+        filter .15s ease,
+        background-color .2s ease,
+        border-color .2s ease;
     }
 
-    .btn:hover{ filter:brightness(.97); }
+    .btn:hover{
+      filter:brightness(.98);
+      transform:translateY(-1px);
+      box-shadow:0 14px 26px rgba(37,99,235,0.22);
+    }
+
+    /* تأثير لحظي أثناء الضغط (pressed) */
+    .btn:active{
+      transform:translateY(1px) scale(0.99);
+      filter:brightness(0.95);
+      box-shadow:
+        0 8px 16px rgba(17,24,39,0.14),
+        inset 0 3px 10px rgba(0,0,0,0.18);
+    }
+
+    .btn .bi{
+      position:relative;
+      z-index:1; /* النص فوق التأثير */
+    }
 
     .btn .bi .ar{
       color:rgba(255,255,255,0.98);
@@ -258,44 +292,48 @@
       font-size:12.5px;
     }
 
-    .btn.active{ background:var(--success); }
-    /* خلي الزر يدعم طبقة شفافة فوقه */
-.btn{
-  position: relative;
-  overflow: hidden;
-}
+    /* حالة Active: نفس اللون الأزرق + إطار توهج + لمعان متحرك */
+    .btn.active{
+      background:var(--primary);
+      box-shadow:
+        0 0 0 4px rgba(22,163,74,0.22),
+        0 18px 34px rgba(37,99,235,0.25);
+    }
 
-/* لما يصير Active: يبقى نفس اللون الأزرق */
-.btn.active{
-  background: var(--primary);
-}
+    .btn.active::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:linear-gradient(
+        120deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.35) 40%,
+        rgba(255,255,255,0) 80%
+      );
+      transform:translateX(-120%);
+      animation:btnShine 1.4s ease-in-out infinite;
+      pointer-events:none;
+    }
 
-/* طبقة شفافة تعطي تأثير "باهت" بدون ما تبهّت النص كثير */
-.btn.active::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,0.5); /* زِد/قلّل الرقم حسب البهتان */
-  pointer-events: none;
-}
-
-/* نخلي النص فوق الطبقة */
-.btn .bi{
-  position: relative;
-  z-index: 1;
-}
-
-/* (اختياري) تأثير لحظي أثناء الضغط باليد */
-.btn:active{
-  transform: scale(0.99);
-  filter: brightness(0.90);
-}
+    @keyframes btnShine{
+      to { transform:translateX(120%); }
+    }
 
     .btn:disabled{
       opacity:.65;
       cursor:not-allowed;
     }
-    .btn:disabled:hover{ filter:none; }
+    .btn:disabled:hover{
+      filter:none;
+      transform:none;
+      box-shadow:0 10px 18px rgba(37,99,235,0.18);
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      .number,.btn,.input-group input{ transition:none; }
+      .number.updated{ transform:none; }
+      .btn.active::after{ animation:none; display:none; }
+    }
 
     .alert-banner{
       display:none;
@@ -390,6 +428,7 @@
       margin:0;
       padding:10px 12px;
       background:#111827;
+      box-shadow:0 10px 18px rgba(17,24,39,0.18);
     }
     .btn.test-btn.secondary{ background:#374151; }
     .test-note{
@@ -398,11 +437,6 @@
       font-size:12.5px;
       font-weight:700;
       text-align:center;
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      .number,.btn,.input-group input{ transition:none; }
-      .number.updated{ transform:none; }
     }
   </style>
 </head>
@@ -731,7 +765,6 @@
     function setVerifyBtnActive(isActive) {
       verifyBtn.classList.toggle("active", !!isActive);
       verifyBtn.setAttribute("aria-pressed", isActive ? "true" : "false");
-      // نص ثابت دائمًا
       verifyBtnAr.textContent = "متابعة";
       verifyBtnFr.textContent = "Suivi";
     }
@@ -835,7 +868,6 @@
       setVerifyBtnActive(false);
     }
 
-    // ====== (ميزة جديدة) إيقاف التتبع مع الإبقاء على رسالة "فات دورك" ======
     function stopTrackingKeepBanner() {
       state.trackingEnabled = false;
       state.lastAlertedDiff = null;
@@ -1042,8 +1074,6 @@
         }
 
         state.lastAlertedDiff = diff;
-
-        // ====== (ميزة جديدة) عند فوات الدور: أوقف التتبع وارجع الزر كما كان ======
         stopTrackingKeepBanner();
 
       } else {
