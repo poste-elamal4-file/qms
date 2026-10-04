@@ -9,7 +9,6 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <!-- (اختياري) ألوان للمتصفح/الشريط -->
   <meta name="theme-color" content="#2563eb">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -820,12 +819,12 @@
     }
 
     function setVerifyBtnActive(isActive) {
-  verifyBtn.classList.toggle("active", !!isActive);
-  verifyBtn.setAttribute("aria-pressed", isActive ? "true" : "false");
+      verifyBtn.classList.toggle("active", !!isActive);
+      verifyBtn.setAttribute("aria-pressed", isActive ? "true" : "false");
 
-  // خلي النص ثابت دائمًا (بدون إيقاف)
-  verifyBtnAr.textContent = "متابعة";
-  verifyBtnFr.textContent = "Suivi";
+      // خلي النص ثابت دائمًا (بدون إيقاف)
+      verifyBtnAr.textContent = "متابعة";
+      verifyBtnFr.textContent = "Suivi";
     }
 
     setVerifyBtnActive(false);
@@ -973,6 +972,13 @@
       setVerifyBtnActive(false);
     }
 
+    // ✅ جديد: إيقاف المتابعة بدون حذف رسالة التنبيه (حتى تبقى "لقد فات دورك")
+    function stopTrackingKeepBanner() {
+      state.trackingEnabled = false;
+      stopPolling();
+      setVerifyBtnActive(false);
+    }
+
     function setSystemClosed(isClosed) {
       const next = !!isClosed;
 
@@ -1086,7 +1092,6 @@
         if (!("Notification" in window)) return false;
         if (!window.isSecureContext) return false;
         if (Notification.permission !== "granted") return false;
-
 
         const title = urgent ? "تنبيه / Alerte" : "إشعار / Notification";
         const body = `${arText}\n${frText}`;
@@ -1249,6 +1254,9 @@
         }
 
         state.lastAlertedDiff = diff;
+
+        // ✅ المطلوب: إذا فات الدور يرجع زر المتابعة لحالته العادية (إلغاء اللون الأخضر وإيقاف المتابعة)
+        stopTrackingKeepBanner();
       } else {
         clearBanner();
         state.lastAlertedDiff = diff;
@@ -1340,24 +1348,24 @@
     }
 
     function startTrackingOnly() {
-  // إذا بدأت المتابعة مسبقًا لا تفعل شيئًا (بدون إيقاف)
-    if (state.trackingEnabled) return;
-  
-    if (state.systemClosed) return;
-    if (!inputsAreValidOrShowMessage()) return;
-  
-    saveSettings();
-  
-    state.trackingEnabled = true;
-    state.lastAlertedDiff = null;
-  
-    setVerifyBtnActive(true);
-  
-    registerServiceWorker().catch(() => {});
-    ensureNotificationsEnabled().catch(() => {});
-  
-    startPolling();
-    checkUserAlert(state.current_ticket);
+      // إذا بدأت المتابعة مسبقًا لا تفعل شيئًا (بدون إيقاف)
+      if (state.trackingEnabled) return;
+
+      if (state.systemClosed) return;
+      if (!inputsAreValidOrShowMessage()) return;
+
+      saveSettings();
+
+      state.trackingEnabled = true;
+      state.lastAlertedDiff = null;
+
+      setVerifyBtnActive(true);
+
+      registerServiceWorker().catch(() => {});
+      ensureNotificationsEnabled().catch(() => {});
+
+      startPolling();
+      checkUserAlert(state.current_ticket);
     }
 
     verifyBtn.addEventListener("click", startTrackingOnly);
