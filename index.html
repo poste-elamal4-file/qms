@@ -258,8 +258,18 @@
       font-size:12.5px;
     }
 
+    /* الزر عند تفعيل المتابعة: يبقى أزرق + إطار واضح */
     .btn.active{
-      background:var(--success);
+      background: var(--primary);              /* نفس الأزرق */
+      border-color: rgba(255,255,255,0.55);    /* حافة خفيفة */
+      box-shadow:
+        0 0 0 4px rgba(37,99,235,0.22),        /* حلقة/إطار أزرق واضح */
+        0 12px 28px rgba(37,99,235,0.22);      /* ظل خفيف */
+    }
+    
+    /* (اختياري) خلي الـ hover نفس الإحساس لما يكون Active */
+    .btn.active:hover{
+      filter: brightness(.98);
     }
 
     .btn:disabled{
@@ -824,21 +834,15 @@
     function setVerifyBtnActive(isActive) {
       verifyBtn.classList.toggle("active", !!isActive);
       verifyBtn.setAttribute("aria-pressed", isActive ? "true" : "false");
-
-      // خلي النص ثابت دائمًا (بدون إيقاف)
-      verifyBtnAr.textContent = "متابعة";
-      verifyBtnFr.textContent = "Suivi";
-    }
-
-    setVerifyBtnActive(false);
-
-    function triggerUpdateAnimation() {
-      queueNumEl.classList.add("updated");
-
-      setTimeout(() => {
-        queueNumEl.classList.remove("updated");
-      }, 350);
-    }
+    
+      if (isActive) {
+        verifyBtnAr.textContent = "يتم المتابعة";
+        verifyBtnFr.textContent = "Suivi activé";
+      } else {
+        verifyBtnAr.textContent = "متابعة";
+        verifyBtnFr.textContent = "Suivi";
+      }
+      }
 
     function setInputsFrozen(frozen) {
       const shouldFreeze = !!frozen;
