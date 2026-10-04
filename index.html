@@ -258,7 +258,9 @@
       font-size:12.5px;
     }
 
-
+    .btn.active{
+      background:var(--success);
+    }
 
     .btn:disabled{
       opacity:.65;
@@ -817,18 +819,13 @@
     }
 
     function setVerifyBtnActive(isActive) {
-    // لا نستخدم اللون الأخضر إطلاقًا
-    verifyBtn.classList.remove("active");
-  
-    // نفس فكرة النظام مغلق: Disabled (سيأخذ ستايل .btn:disabled)
-    verifyBtn.disabled = !!isActive || state.systemClosed;
-  
-    verifyBtn.setAttribute("aria-pressed", isActive ? "true" : "false");
-  
-    // خلي النص ثابت دائمًا
-    verifyBtnAr.textContent = "متابعة";
-    verifyBtnFr.textContent = "Suivi";
-  }
+      verifyBtn.classList.toggle("active", !!isActive);
+      verifyBtn.setAttribute("aria-pressed", isActive ? "true" : "false");
+
+      // خلي النص ثابت دائمًا (بدون إيقاف)
+      verifyBtnAr.textContent = "متابعة";
+      verifyBtnFr.textContent = "Suivi";
+    }
 
     setVerifyBtnActive(false);
 
