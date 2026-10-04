@@ -639,6 +639,9 @@
     const verifyBtnAr = document.getElementById("verifyBtnAr");
     const verifyBtnFr = document.getElementById("verifyBtnFr");
 
+    // ✅ قيمة الهامش الافتراضي (يرجع لها عندما يفوت الدور)
+    const DEFAULT_THRESHOLD = String(thresholdInput.defaultValue || "10");
+
     // Test panel elements
     const testPanel = document.getElementById("testPanel");
     const testTicketInput = document.getElementById("testTicketInput");
@@ -1045,14 +1048,19 @@
       }
 
       const diff = info.myTicket - info.currentTicket;
-      const maxAllowed = Math.max(0, diff);
 
+      // ✅ إذا فات الدور (diff < 0): رجّع القيود للوضع الطبيعي (بدون max=0 وبدون clamp)
+      if (diff < 0) {
+        thresholdInput.removeAttribute("max");
+        return;
+      }
+
+      const maxAllowed = Math.max(0, diff);
       thresholdInput.max = String(maxAllowed);
 
       if (!clamp) return;
 
       const threshold = parseInt(thresholdInput.value, 10);
-
       if (Number.isNaN(threshold)) return;
 
       const clampedValue = Math.min(
@@ -1255,7 +1263,12 @@
 
         state.lastAlertedDiff = diff;
 
-        // ✅ المطلوب: إذا فات الدور يرجع زر المتابعة لحالته العادية (إلغاء اللون الأخضر وإيقاف المتابعة)
+        // ✅ المطلوب: لما يفوت الدور يرجع الهامش للافتراضي
+        thresholdInput.value = DEFAULT_THRESHOLD;
+        thresholdInput.removeAttribute("max");
+        saveSettings();
+
+        // ✅ إيقاف المتابعة مع إبقاء رسالة "لقد فات دورك"
         stopTrackingKeepBanner();
       } else {
         clearBanner();
