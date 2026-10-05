@@ -583,6 +583,8 @@
     /***********************
      * Policy
      ***********************/
+    const HEARTBEAT_GRACE_MS = 20000; // 20 ثانية (تقدر تخليها 30000)
+    const REQUEST_GRACE_MS   = 20000; // اختياري
     const HEARTBEAT_INTERVAL_MIN = 5;
     const HEARTBEAT_MISSED_LIMIT = 2;
     const HEARTBEAT_CLOSE_MS =
@@ -894,12 +896,12 @@
       const lastRequest = Number(state.last_request_ms);
 
       const hbStale =
-        !Number.isFinite(lastSeen) ||
-        now - lastSeen >= HEARTBEAT_CLOSE_MS;
+      !Number.isFinite(lastSeen) ||
+      now - lastSeen >= (HEARTBEAT_CLOSE_MS + HEARTBEAT_GRACE_MS);
 
       const reqStale =
-        !Number.isFinite(lastRequest) ||
-        now - lastRequest >= REQUEST_CLOSE_MS;
+      !Number.isFinite(lastRequest) ||
+       now - lastRequest >= (REQUEST_CLOSE_MS + REQUEST_GRACE_MS);
 
       return { hbStale, reqStale };
     }
