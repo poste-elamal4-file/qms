@@ -1009,7 +1009,7 @@
       return Promise.resolve();
     }
 
-    function playAlertBeep() {
+ function playAlertBeep() {
       ensureAudio().then(() => {
         if (!audioCtx) return;
 
@@ -1035,6 +1035,7 @@
         playTone(1318.51, now + 0.3, 0.4);
       }).catch(() => {});
     }
+
 
     ["pointerdown", "touchstart", "mousedown", "keydown"].forEach((eventName) => {
       window.addEventListener(
