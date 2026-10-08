@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Poste Cité El Amel — Système de gestion de file d'attente</title>
+<title>Poste Cité El Amel - Système de gestion de file d'attente</title>
 <link rel="icon" type="image/png" href="./favicon-96x96.png" sizes="96x96">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="shortcut icon" href="./favicon.ico">
@@ -304,7 +304,7 @@ body.popup-open{overflow:hidden}
   </div>
   <h1 class="page-title">
     <span class="bi center">
-      <span class="ar" lang="ar" style="font-size:45px">الرقم الحالي</span>
+      <span class="ar" lang="ar" style="font-size:50px">الرقم الحالي</span>
       <span class="fr" lang="fr" style="font-size:20px">Numéro actuel</span>
     </span>
   </h1>
@@ -327,6 +327,7 @@ body.popup-open{overflow:hidden}
       </label>
       <input type="number" inputmode="numeric" step="1" id="myTicketInput" min="1">
     </div>
+    
     <div class="input-group">
       <label for="thresholdInput">
         <span class="bi">
@@ -336,26 +337,30 @@ body.popup-open{overflow:hidden}
       </label>
       <input type="number" inputmode="numeric" step="1" id="thresholdInput" value="10" min="0">
     </div>
+        <!-- رسالة إبقاء المتصفح مفتوحًا -->
+<div id="browserReminder" class="browser-reminder" role="status">
+  <span class="bi center">
+
+    <span class="ar" lang="ar">
+       يُرجى إبقاء المتصفح مفتوحًا لضمان تلقي الإشعارات.
+    </span>
+
+    <span class="fr" lang="fr">
+      Veuillez garder le navigateur ouvert pour recevoir les notifications.
+    </span>
+    
+    
+  </span>
+</div>
+    
     <button id="verifyBtn" class="btn" type="button" aria-pressed="false">
       <span class="bi center">
         <span class="ar" id="verifyBtnAr" lang="ar">متابعة</span>
         <span class="fr" id="verifyBtnFr" lang="fr">Suivi</span>
       </span>
     </button>
-    <!-- رسالة إبقاء المتصفح مفتوحًا -->
-<div id="browserReminder" class="browser-reminder" role="status">
-  <span class="bi center">
 
-    <span class="ar" lang="ar">
-       يُرجى إبقاء المتصفح مفتوحًا لضمان تلقي التنبيهات.
-    </span>
 
-    <span class="fr" lang="fr">
-      Veuillez garder le navigateur ouvert pour recevoir les alertes.
-    </span>
-
-  </span>
-</div>
 
 <div id="alertBanner" class="alert-banner" role="status" aria-live="polite"></div>
   </div>
